@@ -46,7 +46,7 @@ public class Matriz implements Cloneable {
         this.valores = valores;
     }
 
-    public void selecionarValor(float valor, int i, int j) {
+    public void definirValor(float valor, int i, int j) {
         valores[i][j] = valor;
     }
 
@@ -233,7 +233,7 @@ public class Matriz implements Cloneable {
                 for (int k = 0; k < o; k++) {
                     valor += obterValor(i, k) * outra.obterValor(k, j);
                 }
-                saida.selecionarValor(valor, i, j);
+                saida.definirValor(valor, i, j);
             }
         }
 
@@ -283,13 +283,14 @@ public class Matriz implements Cloneable {
      *
      * @return Uma cópia profunda dessa matriz
      */
-    public Matriz Clone() {
+    @Override
+    public Matriz clone() {
         int m = obterAltura();
         int n = obterLargura();
         float[][] cloneValores = new float[m][n];
 
         for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; i++) {
+            for (int j = 0; j < n; j++) {
                 cloneValores[i][j] = valores[i][j];
             }
         }
@@ -310,7 +311,7 @@ public class Matriz implements Cloneable {
         int n = matriz.obterLargura();
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                matriz.selecionarValor(min + delta * r.nextFloat(), i, j);
+                matriz.definirValor(min + delta * r.nextFloat(), i, j);
             }
         }
     }
@@ -329,34 +330,65 @@ public class Matriz implements Cloneable {
         return valores[i][j];
     }
 
+    public Matriz obterMatrizComplemento() {
+        if (!verificarQuadrada()) {
+            throw new IllegalStateException("a matriz deve ser quadrada para que tenha uma matriz complemento");
+        }
+
+        int ordem = obterAltura();
+        Matriz m = new Matriz(ordem, ordem);
+        for (int i = 0; i < ordem; i++) {
+            for (int j = 0; j < ordem; j++) {
+                m.definirValor(obterMenorComplemento(i, j), i, j);
+            }
+        }
+        return m;
+    }
+
+    public Matriz obterMatrizCofator() {
+        if (!verificarQuadrada()) {
+            throw new IllegalStateException("a matriz deve ser quadrada para que tenha uma matriz cofator");
+        }
+
+        int ordem = obterAltura();
+        Matriz m = new Matriz(ordem, ordem);
+        for (int i = 0; i < ordem; i++) {
+            for (int j = 0; j < ordem; j++) {
+                m.definirValor(obterCofator(i, j), i, j);
+            }
+        }
+        return m;
+    }
+
     public float obterDeterminante() {
         if (!verificarQuadrada()) {
-            throw new IllegalStateException("A matriz deve ser quadrada para que tenha um determinate");
+            throw new IllegalStateException("a matriz deve ser quadrada para que tenha um determinate");
         }
 
         int ordem = obterAltura();
 
-        if (ordem == 1) {
-            return valores[0][0];
-        } else if (ordem == 2) {
-            return valores[0][0] * valores[1][1] - valores[0][1] * valores[1][0];
-        } else if (ordem == 3) {
-            float determinante = 0;
-            for (int k = 0; k < 3; k++) {//diagonais principais
-                float multiplicado = 1;
-                for (int l = 0; l < 3; l++) {
-                    multiplicado *= obterValorExtendido(l, k + l);
+        switch (ordem) {
+            case 1:
+                return valores[0][0];
+            case 2:
+                return valores[0][0] * valores[1][1] - valores[0][1] * valores[1][0];
+            case 3:
+                float determinante = 0;
+                for (int k = 0; k < 3; k++) {//diagonais principais
+                    float multiplicado = 1;
+                    for (int l = 0; l < 3; l++) {
+                        multiplicado *= obterValorExtendido(l, k + l);
+                    }
+                    determinante += multiplicado;
                 }
-                determinante += multiplicado;
-            }
-            for (int k = 0; k < 3; k++) {//diagonais oposta
-                float multiplicado = 1;
-                for (int l = 0; l < 3; l++) {
-                    multiplicado *= obterValorExtendido(2 - l, k + l);
+                for (int k = 0; k < 3; k++) {//diagonais oposta
+                    float multiplicado = 1;
+                    for (int l = 0; l < 3; l++) {
+                        multiplicado *= obterValorExtendido(2 - l, k + l);
+                    }
+                    determinante -= multiplicado;
                 }
-                determinante -= multiplicado;
-            }
-            return determinante;
+                return determinante;
         }
 
         //aqui o coisa começa a ficar interresante, usando método de Laplace
@@ -379,20 +411,87 @@ public class Matriz implements Cloneable {
             throw new IllegalStateException("a matriz deve ser de pelo menos ordem 2 para ter um cofator");
         }
 
+        return sinalCofator(i, j) * obterMenorComplemento(i, j);
+    }
+
+    public float obterMenorComplemento(int i, int j) {
+        if (!verificarQuadrada()) {
+            throw new IllegalStateException("a matriz deve ser quadrada para ter um menor complemento");
+        }
+
+        int ordem = obterAltura();
+        if (ordem == 1) {
+            throw new IllegalStateException("a matriz deve ser de pelo menos ordem 2 para ter um menor complemento");
+        }
+
         Matriz menor = new Matriz(ordem - 1, ordem - 1);
         for (int k = 0, y = 0; k < ordem; k++) {
             if (k != i) {
                 for (int l = 0, x = 0; l < ordem; l++) {
                     if (l != j) {
-                        System.out.println(k + " " + l + " | " + x + " " + y);
-                        menor.selecionarValor(valores[k][l], x, y);
-                        x++;//avança a coluna da menor
+                        menor.definirValor(valores[k][l], x, y);
+                        x++;
                     }
                 }
-                y++;//avança a linha da menor
+                y++;
             }
         }
-        return Matriz.sinalCofator(i, j) * menor.obterDeterminante();
+
+        return menor.obterDeterminante();
+    }
+
+    /**
+     * Cria uma nova matriz de tamanho diferente, e copia os valores dessa
+     * matriz para a nova
+     *
+     * @param m a altura da nova matriz
+     * @param n a largura da nova matriz
+     * @return a nova matriz
+     */
+    public Matriz redimensionar(int m, int n) {
+        Matriz nova = new Matriz(m, n);
+        int ml = Math.min(m, obterAltura());
+        int nl = Math.min(n, obterLargura());
+
+        for (int i = 0; i < ml; i++) {
+            for (int j = 0; j < nl; j++) {
+                nova.definirValor(obterValor(i, j), i, j);
+            }
+        }
+        return nova;
+    }
+
+    /**
+     * transpôe essa matriz em si mesma
+     */
+    public void transpor() {
+        int m = obterAltura();
+        int n = obterLargura();
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                float t = valores[i][j];
+                valores[i][j] = valores[j][i];
+                valores[j][i] = t;
+            }
+        }
+    }
+
+    /**
+     *
+     * @return Uma representação textual da matriz
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (float[] linhas : valores) {
+            for (float coluna : linhas) {
+                sb.append(coluna);
+                sb.append(" ");
+            }
+            sb.append('\n');
+        }
+        return sb.toString();
     }
 
     /**
@@ -404,7 +503,7 @@ public class Matriz implements Cloneable {
     public static Matriz gerarIdentidade(int ordem) {
         Matriz identidade = new Matriz(ordem, ordem);
         for (int k = 0; k < ordem; k++) {
-            identidade.selecionarValor(1, k, k);
+            identidade.definirValor(1, k, k);
         }
         return identidade;
     }
@@ -419,5 +518,4 @@ public class Matriz implements Cloneable {
     public static float sinalCofator(int i, int j) {
         return ((i + j) % 2 == 0) ? 1f : -1f;
     }
-
 }
