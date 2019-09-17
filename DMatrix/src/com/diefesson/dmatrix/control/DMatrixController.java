@@ -14,13 +14,22 @@ import java.util.function.Function;
 public class DMatrixController {
 
     private final Map<String, Matriz> matrizes = new HashMap<>();
-    private final Map<String, Float> numeros = new HashMap<>();
+    private final Map<String, Double> numeros = new HashMap<>();
     private final DMatrixView view;
 
+    /**
+     * 
+     * @param view A view associada a este controlador
+     */
     public DMatrixController(DMatrixView view) {
         this.view = view;
     }
 
+    /**
+     * Adciona uma matriz a coleção contida no controlador
+     * @param chave A chave da matriz
+     * @param matriz A matriz que será armazenada
+     */
     public void adcionarMatriz(String chave, Matriz matriz) {
         if (chave == null || matriz == null) {
             throw new NullPointerException("nem a chave nem a matriz podem ser nulas");
@@ -31,6 +40,11 @@ public class DMatrixController {
         }
     }
 
+    /**
+     * Obtém uma matriz a partir de sua chave
+     * @param chave A chave que identifica a matriz
+     * @return A matriz ou null caso ela não seja encontrada
+     */
     public Matriz obterMatriz(String chave) {
         if (chave == null) {
             throw new NullPointerException("a chave não pode ser nula");
@@ -38,6 +52,11 @@ public class DMatrixController {
         return matrizes.get(chave);
     }
 
+    /**
+     * Remove uma matriz da coleção
+     * @param chave A chave que indentifica a matriz
+     * @return Retorna a matriz que foi removida
+     */
     public Matriz removerMatriz(String chave) {
         if (chave == null) {
             throw new NullPointerException("a chave não pode ser nula");
@@ -49,18 +68,28 @@ public class DMatrixController {
         return matriz;
     }
 
-    public void adcionarNumero(String chave, float numero) {
+    /**
+     * Adciona um número a coleção
+     * @param chave A chave que indentica o número
+     * @param numero O numero a ser armazenado
+     */
+    public void adcionarNumero(String chave, double numero) {
         if (chave == null) {
             throw new NullPointerException("a chave não pode ser nula");
         }
 
-        Float antigo = numeros.put(chave, numero);
+        Double antigo = numeros.put(chave, numero);
         if (view != null) {
             view.emNumeroAdcionado(chave, numero, antigo);
         }
     }
 
-    public Float obterNumero(String chave) {
+    /**
+     * Obtém um número da coleção
+     * @param chave A chave que identifica o número
+     * @return O número ou null, caso não seja encontrado
+     */
+    public Double obterNumero(String chave) {
         if (chave == null) {
             throw new NullPointerException("a chave não pode ser nula");
         }
@@ -68,12 +97,17 @@ public class DMatrixController {
         return numeros.get(chave);
     }
 
-    public Float removerNumero(String chave) {
+    /**
+     * Remove um número da coleção
+     * @param chave A chave que identifica o número
+     * @return O número removido, ou null caso ele não seja encontrado
+     */
+    public Double removerNumero(String chave) {
         if (chave == null) {
             throw new NullPointerException("a chave não pode ser nula");
         }
 
-        Float numero = numeros.remove(chave);
+        Double numero = numeros.remove(chave);
         if (view != null && numero != null) {
             view.emNumeroRemovido(chave, numero);
         }
@@ -81,10 +115,10 @@ public class DMatrixController {
     }
 
     /**
-     *
+     * Obtém uma matriz a partir de filtro dado
      * @param filtro A interface funcional que serve como filtro para selecionar
      * matrizes
-     * @return Um mapa contendo as chaves e as matrizes que passaram pelo filtro
+     * @return Um mapa contendo as chaves e as matrizes aprovados pelo filtro
      */
     public Map<String, Matriz> obterMatrizes(Function<Matriz, Boolean> filtro) {
         Map<String, Matriz> resultados = new HashMap<>();
@@ -97,13 +131,23 @@ public class DMatrixController {
     }
 
     /**
-     * remove todas as matrizes identificadas pela chaves dadas
+     * Remove todas as matrizes identificadas pela chaves dadas
      *
      * @param chaves as chaves que indenticam as matrizes a serem removidas
      */
     public void removerMatrizes(String[] chaves) {
         for (String chave : chaves) {
             removerMatriz(chave);
+        }
+    }
+    
+    /**
+     * Remove todos os números identificados pelos chaves dadas
+     * @param chaves As chaves que indentificam os números que serão removidos
+     */
+    public void removerNumeros(String[] chaves){
+        for(String chave : chaves){
+            removerNumero(chave);
         }
     }
 

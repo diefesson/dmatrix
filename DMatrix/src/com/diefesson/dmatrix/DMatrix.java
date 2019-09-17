@@ -1,6 +1,11 @@
 package com.diefesson.dmatrix;
 
+import com.diefesson.dmatrix.model.Matriz;
+import com.diefesson.dmatrix.model.Sistema;
 import com.diefesson.dmatrix.view.DMatrixView;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.LinkedList;
 
 /**
  *
@@ -8,34 +13,42 @@ import com.diefesson.dmatrix.view.DMatrixView;
  */
 public class DMatrix {
 
-    public static void main(String[] args) throws InterruptedException {
-//        float [][] valores = new float[][]{
-//            {1, 2, 3, 4, 5},
-//            {5, 7, 2, 3, 9,},
-//            {3, 0, 1, 0, 10},
-//            {1, 2, 3, 6, 3},
-//            {3, 2, 6, 4, 1}
-//        };
+    public static void main(String[] args) throws InterruptedException {        
+        Matriz m = new Matriz(new double[][]{
+            {1, 2, 4},
+            {0, 0, 1},
+            {0, 0, 1}
+        });
+        
+        Matriz m2 = new Matriz(new double[][]{
+            {1},
+            {2},
+            {3}
+        });
+
+        System.out.println("matriz\n" + m);
+        
+        System.out.println("matriz 2\n" + m2);
+        
+        
+        Sistema s = new Sistema(m, m2);
+        System.out.println(s.solucionar());
+        System.out.println(s);
+        
+        DMatrixView view = new DMatrixView();
+        view.setVisible(true);
+
+//        double antigoDeterminante = m.obterDeterminante();
+//
+//        double multiplicador = m.prepararMatriz();
 //        
-//        Matriz m = new Matriz(valores);
-//        System.out.println(m.obterDeterminante());
-
-        DMatrixView janela = new DMatrixView();
-        janela.setVisible(true);
-
-//          Matriz m1 = new Matriz(new float[][]{
-//              {1, 2, 3},
-//              {4, 5, 6},
-//              {7, 8, 9}
-//          });
-//          
-//          EditorView ev = new EditorView(new DMatrixController(null));
-//          EditorController ec = ev.obterController();;
-//          
-//          ev.setVisible(true);
-//          
-//          Thread.sleep(2000);
-//          ec.carregar("matriz 2", m1);
+//        double novoDeterminante = m.obterDeterminante();
+//        
+//        double res = novoDeterminante * multiplicador;
+//        
+//        System.out.println("ad: " + antigoDeterminante + " m: " + multiplicador + " nd: " + novoDeterminante + "res: " + res);
+//        
+//        System.out.println("nova matriz\n" + m);
     }
 
 }

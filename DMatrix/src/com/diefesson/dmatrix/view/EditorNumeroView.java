@@ -166,7 +166,7 @@ public class EditorNumeroView extends javax.swing.JFrame {
 
     private void atualizarController() {
         controller.definirNome(campoNome.getText());
-        controller.definirNumero(Float.parseFloat(campoValor.getText()));
+        controller.definirNumero(Double.parseDouble(campoValor.getText()));
     }
 
 }

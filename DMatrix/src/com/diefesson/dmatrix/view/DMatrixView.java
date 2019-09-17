@@ -65,7 +65,7 @@ public class DMatrixView extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Float.class
+                java.lang.String.class, java.lang.Double.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -315,7 +315,7 @@ public class DMatrixView extends javax.swing.JFrame {
         });
     }
 
-    public void emNumeroAdcionado(String chave, float numero, Float velho) {
+    public void emNumeroAdcionado(String chave, double numero, Double velho) {
         SwingUtilities.invokeLater(() -> {
             if (velho != null) {
                 int indice = -1;
@@ -333,7 +333,7 @@ public class DMatrixView extends javax.swing.JFrame {
         });
     }
 
-    public void emNumeroRemovido(String chave, Float numero) {
+    public void emNumeroRemovido(String chave, Double numero) {
         SwingUtilities.invokeLater(() -> {
             for (int i = 0; i < modeloNumeros.getRowCount(); i++) {
                 String c = (String) modeloNumeros.getValueAt(i, 0);

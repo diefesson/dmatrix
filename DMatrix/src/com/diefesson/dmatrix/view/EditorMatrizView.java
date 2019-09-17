@@ -301,9 +301,9 @@ public class EditorMatrizView extends javax.swing.JFrame {
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                float valor = 0;
+                double valor = 0;
                 try {
-                    valor = Float.parseFloat(modeloValores.getValueAt(i, j).toString());
+                    valor = Double.parseDouble(modeloValores.getValueAt(i, j).toString());
                 } catch (NumberFormatException ex) {
 
                 }
