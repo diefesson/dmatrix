@@ -22,6 +22,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuNovaMatrizActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuRenomearMatriz">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Renomear"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuRenomearMatrizActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuEditarMatriz">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Editar selecionada"/>
@@ -38,24 +46,81 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuRemoverMatrizesActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="separadorMatriz1">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuSomarMatriz">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Somar"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuSomarMatrizActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuMultiplicarMatriz">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Multiplicar"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuMultiplicarMatrizActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="separadorMatriz2">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuTransposta">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Transposta"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuComplement">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Complemento"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuCofatora">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Cofatora"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuAdjunta">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Adjunta"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuInversa">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Inversa"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="separadorMatriz3">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuFatoracao">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Fatora&#xe7;&#xe3;o PLU"/>
+              </Properties>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="menuNumeros">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Numeros"/>
+            <Property name="text" type="java.lang.String" value="Escalares"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuNovoNumero">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Novo numero"/>
+                <Property name="text" type="java.lang.String" value="Novo escalar"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuNovoNumeroActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuRenomearNumero">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Renomear"/>
+              </Properties>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuEditarNumero">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Editar numero"/>
+                <Property name="text" type="java.lang.String" value="Editar escalar"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuEditarNumeroActionPerformed"/>
@@ -63,7 +128,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuRemoverNumeros">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Remover numeros"/>
+                <Property name="text" type="java.lang.String" value="Remover escalar"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuRemoverNumerosActionPerformed"/>
@@ -75,10 +140,20 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Opera&#xe7;&#xf5;es"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="menuDeterminante">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Determinante"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuDeterminanteActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="menuJavaScript">
           <Properties>
-            <Property name="text" type="java.lang.String" value="JavaScript"/>
+            <Property name="text" type="java.lang.String" value="Groovy"/>
           </Properties>
         </Menu>
         <Menu class="javax.swing.JMenu" name="menuAjuda">
@@ -165,7 +240,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="textoNumeros">
       <Properties>
-        <Property name="text" type="java.lang.String" value="N&#xfa;meros"/>
+        <Property name="text" type="java.lang.String" value="Escalares"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="rolamentoMatrizes">

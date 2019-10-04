@@ -34,7 +34,7 @@ public class Posicao implements Cloneable {
      * @return Uma cópia dessa Posição
      */
     @Override
-    public Object clone(){
+    public Object clone() {
         return new Posicao(i, j);
     }
 
@@ -42,7 +42,5 @@ public class Posicao implements Cloneable {
     public String toString() {
         return "(" + i + ", " + j + ")";
     }
-    
-    
 
 }

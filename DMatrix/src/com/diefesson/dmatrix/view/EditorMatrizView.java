@@ -1,11 +1,8 @@
 package com.diefesson.dmatrix.view;
 
 import com.diefesson.dmatrix.control.DMatrixController;
-import com.diefesson.dmatrix.control.EditorMatrizController;
+import com.diefesson.dmatrix.control.EditorMatrizControl;
 import com.diefesson.dmatrix.model.Matriz;
-import javax.swing.CellEditor;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import javax.swing.SwingUtilities;
@@ -61,6 +58,7 @@ public class EditorMatrizView extends javax.swing.JFrame {
 
             }
         ));
+        tabelaValores.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(tabelaValores);
 
         textoNome.setText("Nome da matriz:");
@@ -161,15 +159,16 @@ public class EditorMatrizView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoRedimensionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRedimensionarActionPerformed
-        atualizarController();//manda os dados da tabela para a matriz
+        atualizarControl();//manda os dados da tabela para a matriz
         controller.redimensionar((int) spinnerLinhas.getValue(), (int) spinnerColunas.getValue());//redimensiona a matriz
         atualizarView();//e então recebe os da matriz para a tabelas
     }//GEN-LAST:event_botaoRedimensionarActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
-        atualizarController();
+        atualizarControl();
         controller.definirNome(campoNome.getText());
         controller.salvar();
+        dispose();
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -242,7 +241,7 @@ public class EditorMatrizView extends javax.swing.JFrame {
     private javax.swing.JLabel textoNome;
     // End of variables declaration//GEN-END:variables
 
-    private final EditorMatrizController controller;
+    private final EditorMatrizControl controller;
     private final DefaultTableModel modeloValores;
 
     /**
@@ -252,8 +251,11 @@ public class EditorMatrizView extends javax.swing.JFrame {
      */
     public EditorMatrizView(DMatrixController dmController) {
         initComponents();
-        controller = new EditorMatrizController(dmController, this);
-        modeloValores = (DefaultTableModel) tabelaValores.getModel();
+
+        controller = new EditorMatrizControl(dmController, this);
+        modeloValores = new TabelaNumeros();
+        tabelaValores.setModel(modeloValores);
+
         atualizarView();
     }
 
@@ -294,7 +296,7 @@ public class EditorMatrizView extends javax.swing.JFrame {
      * Atualiza a matriz no sentido view -> control
      *
      */
-    private void atualizarController() {
+    private void atualizarControl() {
         int m = modeloValores.getRowCount();
         int n = modeloValores.getColumnCount();
         Matriz matriz = controller.obterMatriz();
@@ -312,7 +314,7 @@ public class EditorMatrizView extends javax.swing.JFrame {
         }
     }
 
-    public EditorMatrizController obterController() {
+    public EditorMatrizControl obterController() {
         return controller;
     }
 

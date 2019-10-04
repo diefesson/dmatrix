@@ -1,12 +1,13 @@
 package com.diefesson.dmatrix.view;
 
 import com.diefesson.dmatrix.control.DMatrixController;
-import com.diefesson.dmatrix.control.EditorMatrizController;
-import com.diefesson.dmatrix.control.EditorNumeroController;
+import com.diefesson.dmatrix.control.EditorMatrizControl;
+import com.diefesson.dmatrix.control.EditorNumeroControl;
 import com.diefesson.dmatrix.model.Matriz;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,13 +30,27 @@ public class DMatrixView extends javax.swing.JFrame {
         menuArquivo = new javax.swing.JMenu();
         menuMatrizes = new javax.swing.JMenu();
         menuNovaMatriz = new javax.swing.JMenuItem();
+        menuRenomearMatriz = new javax.swing.JMenuItem();
         menuEditarMatriz = new javax.swing.JMenuItem();
         menuRemoverMatrizes = new javax.swing.JMenuItem();
+        separadorMatriz1 = new javax.swing.JPopupMenu.Separator();
+        menuSomarMatriz = new javax.swing.JMenuItem();
+        menuMultiplicarMatriz = new javax.swing.JMenuItem();
+        separadorMatriz2 = new javax.swing.JPopupMenu.Separator();
+        menuTransposta = new javax.swing.JMenuItem();
+        menuComplement = new javax.swing.JMenuItem();
+        menuCofatora = new javax.swing.JMenuItem();
+        menuAdjunta = new javax.swing.JMenuItem();
+        menuInversa = new javax.swing.JMenuItem();
+        separadorMatriz3 = new javax.swing.JPopupMenu.Separator();
+        menuFatoracao = new javax.swing.JMenuItem();
         menuNumeros = new javax.swing.JMenu();
         menuNovoNumero = new javax.swing.JMenuItem();
+        menuRenomearNumero = new javax.swing.JMenuItem();
         menuEditarNumero = new javax.swing.JMenuItem();
         menuRemoverNumeros = new javax.swing.JMenuItem();
         menuOperacoes = new javax.swing.JMenu();
+        menuDeterminante = new javax.swing.JMenuItem();
         menuJavaScript = new javax.swing.JMenu();
         menuAjuda = new javax.swing.JMenu();
         menuSair = new javax.swing.JMenu();
@@ -50,7 +65,7 @@ public class DMatrixView extends javax.swing.JFrame {
 
         textoMatrizes.setText("Matrizes");
 
-        textoNumeros.setText("Números");
+        textoNumeros.setText("Escalares");
 
         listaMatrizes.setModel(new DefaultListModel<String>()
         );
@@ -87,6 +102,14 @@ public class DMatrixView extends javax.swing.JFrame {
         });
         menuMatrizes.add(menuNovaMatriz);
 
+        menuRenomearMatriz.setText("Renomear");
+        menuRenomearMatriz.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRenomearMatrizActionPerformed(evt);
+            }
+        });
+        menuMatrizes.add(menuRenomearMatriz);
+
         menuEditarMatriz.setText("Editar selecionada");
         menuEditarMatriz.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -102,12 +125,49 @@ public class DMatrixView extends javax.swing.JFrame {
             }
         });
         menuMatrizes.add(menuRemoverMatrizes);
+        menuMatrizes.add(separadorMatriz1);
+
+        menuSomarMatriz.setText("Somar");
+        menuSomarMatriz.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuSomarMatrizActionPerformed(evt);
+            }
+        });
+        menuMatrizes.add(menuSomarMatriz);
+
+        menuMultiplicarMatriz.setText("Multiplicar");
+        menuMultiplicarMatriz.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuMultiplicarMatrizActionPerformed(evt);
+            }
+        });
+        menuMatrizes.add(menuMultiplicarMatriz);
+        menuMatrizes.add(separadorMatriz2);
+
+        menuTransposta.setText("Transposta");
+        menuMatrizes.add(menuTransposta);
+
+        menuComplement.setText("Complemento");
+        menuMatrizes.add(menuComplement);
+
+        menuCofatora.setText("Cofatora");
+        menuMatrizes.add(menuCofatora);
+
+        menuAdjunta.setText("Adjunta");
+        menuMatrizes.add(menuAdjunta);
+
+        menuInversa.setText("Inversa");
+        menuMatrizes.add(menuInversa);
+        menuMatrizes.add(separadorMatriz3);
+
+        menuFatoracao.setText("Fatoração PLU");
+        menuMatrizes.add(menuFatoracao);
 
         barraDeMenu.add(menuMatrizes);
 
-        menuNumeros.setText("Numeros");
+        menuNumeros.setText("Escalares");
 
-        menuNovoNumero.setText("Novo numero");
+        menuNovoNumero.setText("Novo escalar");
         menuNovoNumero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuNovoNumeroActionPerformed(evt);
@@ -115,7 +175,10 @@ public class DMatrixView extends javax.swing.JFrame {
         });
         menuNumeros.add(menuNovoNumero);
 
-        menuEditarNumero.setText("Editar numero");
+        menuRenomearNumero.setText("Renomear");
+        menuNumeros.add(menuRenomearNumero);
+
+        menuEditarNumero.setText("Editar escalar");
         menuEditarNumero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuEditarNumeroActionPerformed(evt);
@@ -123,7 +186,7 @@ public class DMatrixView extends javax.swing.JFrame {
         });
         menuNumeros.add(menuEditarNumero);
 
-        menuRemoverNumeros.setText("Remover numeros");
+        menuRemoverNumeros.setText("Remover escalar");
         menuRemoverNumeros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuRemoverNumerosActionPerformed(evt);
@@ -134,9 +197,18 @@ public class DMatrixView extends javax.swing.JFrame {
         barraDeMenu.add(menuNumeros);
 
         menuOperacoes.setText("Operações");
+
+        menuDeterminante.setText("Determinante");
+        menuDeterminante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuDeterminanteActionPerformed(evt);
+            }
+        });
+        menuOperacoes.add(menuDeterminante);
+
         barraDeMenu.add(menuOperacoes);
 
-        menuJavaScript.setText("JavaScript");
+        menuJavaScript.setText("Groovy");
         barraDeMenu.add(menuJavaScript);
 
         menuAjuda.setText("Ajuda");
@@ -187,6 +259,9 @@ public class DMatrixView extends javax.swing.JFrame {
 
     private void menuNovaMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNovaMatrizActionPerformed
         EditorMatrizView editor = new EditorMatrizView(controller);
+        editor.obterController().definirAoSalvar((nome, matriz) -> {
+            controller.adcionarMatriz(nome, matriz);
+        });
         editor.setVisible(true);
     }//GEN-LAST:event_menuNovaMatrizActionPerformed
 
@@ -217,7 +292,7 @@ public class DMatrixView extends javax.swing.JFrame {
         }
         String chave = modeloMatrizes.getElementAt(indice);
         EditorMatrizView ev = new EditorMatrizView(controller);
-        EditorMatrizController ec = ev.obterController();
+        EditorMatrizControl ec = ev.obterController();
         ec.carregar(chave);
         ev.setVisible(true);
     }//GEN-LAST:event_menuEditarMatrizActionPerformed
@@ -228,7 +303,12 @@ public class DMatrixView extends javax.swing.JFrame {
     }//GEN-LAST:event_menuNovoNumeroActionPerformed
 
     private void menuRemoverNumerosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRemoverNumerosActionPerformed
+        int[] indices = tabelaNumeros.getSelectedRows();
 
+        for (int i : indices) {
+            String chave = (String) modeloNumeros.getValueAt(i, 0);
+            controller.removerNumero(chave);
+        }
     }//GEN-LAST:event_menuRemoverNumerosActionPerformed
 
     private void menuEditarNumeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarNumeroActionPerformed
@@ -239,13 +319,90 @@ public class DMatrixView extends javax.swing.JFrame {
 
         String chave = (String) modeloNumeros.getValueAt(indice, 0);
         EditorNumeroView ev = new EditorNumeroView(controller);
-        EditorNumeroController ec = ev.obterController();
+        EditorNumeroControl ec = ev.obterController();
         ec.carregar(chave);
+        ev.setVisible(true);
     }//GEN-LAST:event_menuEditarNumeroActionPerformed
+
+    private void menuDeterminanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuDeterminanteActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if (indice != -1) {
+            String nome = listaMatrizes.getSelectedValue();
+            Matriz m = controller.obterMatriz(nome);
+
+            if (m.verificarQuadrada()) {
+                controller.adcionarNumero("determinante de " + nome, m.obterDeterminante());
+            } else {
+                JOptionPane.showMessageDialog(this, "A matriz deve ser quadrada");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione uma matriz primeiro");
+        }
+    }//GEN-LAST:event_menuDeterminanteActionPerformed
+
+    private void menuMultiplicarMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMultiplicarMatrizActionPerformed
+        int[] indices = listaMatrizes.getSelectedIndices();
+        if(indices.length < 2){
+            JOptionPane.showMessageDialog(this, "Selecione ao menos duas matrizes");
+            return;
+        }
+        
+        String nome1 = modeloMatrizes.elementAt(indices[0]);
+        String nome2 = modeloMatrizes.elementAt(indices[1]);
+        
+        Matriz m1 = controller.obterMatriz(nome1);
+        Matriz m2 = controller.obterMatriz(nome2);
+        
+        if(m1.obterAltura() == m2.obterAltura() && m1.obterLargura() == m2.obterLargura()){
+            Matriz mul = m1.multiplicar(m2);
+            controller.adcionarMatriz((nome1 + " * " + nome2), mul);
+        } else {
+            JOptionPane.showMessageDialog(this, "As matrizes devem ter o mesmo tamanho");
+        }
+    }//GEN-LAST:event_menuMultiplicarMatrizActionPerformed
+
+    private void menuRenomearMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRenomearMatrizActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if(indice == -1)
+            return;
+        
+        String nome = modeloMatrizes.elementAt(indice);
+        String novoNome = JOptionPane.showInputDialog(this, "novo nome de " + nome);
+        
+        if(novoNome == null)
+            return;
+        
+        Matriz m = controller.obterMatriz(nome);
+        controller.removerMatriz(nome);
+        controller.adcionarMatriz(novoNome, m);
+    }//GEN-LAST:event_menuRenomearMatrizActionPerformed
+
+    private void menuSomarMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSomarMatrizActionPerformed
+        int[] indices = listaMatrizes.getSelectedIndices();
+        if(indices.length < 2){
+            JOptionPane.showMessageDialog(this, "Selecione ao menos duas matrizes");
+            return;
+        }
+        
+        String nome1 = modeloMatrizes.elementAt(indices[0]);
+        String nome2 = modeloMatrizes.elementAt(indices[1]);
+        
+        Matriz m1 = controller.obterMatriz(nome1);
+        Matriz m2 = controller.obterMatriz(nome2);
+        
+        if(m1.obterAltura() == m2.obterAltura() && m1.obterLargura() == m2.obterLargura()){
+            Matriz soma = new Matriz(m1);
+            soma.soma(m2);
+            controller.adcionarMatriz((nome1 + " + " + nome2), soma);
+        } else {
+            JOptionPane.showMessageDialog(this, "As matrizes devem ter o mesmo tamanho");
+        }
+    }//GEN-LAST:event_menuSomarMatrizActionPerformed
 
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                System.out.println(info.getName());
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
@@ -265,21 +422,35 @@ public class DMatrixView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraDeMenu;
     private javax.swing.JList<String> listaMatrizes;
+    private javax.swing.JMenuItem menuAdjunta;
     private javax.swing.JMenu menuAjuda;
     private javax.swing.JMenu menuArquivo;
+    private javax.swing.JMenuItem menuCofatora;
+    private javax.swing.JMenuItem menuComplement;
+    private javax.swing.JMenuItem menuDeterminante;
     private javax.swing.JMenuItem menuEditarMatriz;
     private javax.swing.JMenuItem menuEditarNumero;
+    private javax.swing.JMenuItem menuFatoracao;
+    private javax.swing.JMenuItem menuInversa;
     private javax.swing.JMenu menuJavaScript;
     private javax.swing.JMenu menuMatrizes;
+    private javax.swing.JMenuItem menuMultiplicarMatriz;
     private javax.swing.JMenuItem menuNovaMatriz;
     private javax.swing.JMenuItem menuNovoNumero;
     private javax.swing.JMenu menuNumeros;
     private javax.swing.JMenu menuOperacoes;
     private javax.swing.JMenuItem menuRemoverMatrizes;
     private javax.swing.JMenuItem menuRemoverNumeros;
+    private javax.swing.JMenuItem menuRenomearMatriz;
+    private javax.swing.JMenuItem menuRenomearNumero;
     private javax.swing.JMenu menuSair;
+    private javax.swing.JMenuItem menuSomarMatriz;
+    private javax.swing.JMenuItem menuTransposta;
     private javax.swing.JScrollPane rolamentoMatrizes;
     private javax.swing.JScrollPane rolamentoNumeros;
+    private javax.swing.JPopupMenu.Separator separadorMatriz1;
+    private javax.swing.JPopupMenu.Separator separadorMatriz2;
+    private javax.swing.JPopupMenu.Separator separadorMatriz3;
     private javax.swing.JTable tabelaNumeros;
     private javax.swing.JLabel textoMatrizes;
     private javax.swing.JLabel textoNumeros;

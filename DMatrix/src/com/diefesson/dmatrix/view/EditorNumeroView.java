@@ -1,7 +1,7 @@
 package com.diefesson.dmatrix.view;
 
 import com.diefesson.dmatrix.control.DMatrixController;
-import com.diefesson.dmatrix.control.EditorNumeroController;
+import com.diefesson.dmatrix.control.EditorNumeroControl;
 
 /**
  *
@@ -144,14 +144,14 @@ public class EditorNumeroView extends javax.swing.JFrame {
     private javax.swing.JLabel textoValor;
     // End of variables declaration//GEN-END:variables
 
-    private final EditorNumeroController controller;
+    private final EditorNumeroControl controller;
 
     public EditorNumeroView(DMatrixController dmController) {
-        controller = new EditorNumeroController(this, dmController);
+        controller = new EditorNumeroControl(this, dmController);
         initComponents();
     }
 
-    public EditorNumeroController obterController() {
+    public EditorNumeroControl obterController() {
         return controller;
     }
 

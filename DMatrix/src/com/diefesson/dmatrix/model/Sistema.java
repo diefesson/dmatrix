@@ -1,12 +1,15 @@
 package com.diefesson.dmatrix.model;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
+ * Classe desnecessária, já começei a adcionar novos métodos na classe Matriz
+ * dessa forma é mais flexivel de trabalhar com Gauss, fatoração LU e eliminação
+ * por linhas
  *
  * @author Diefesson de Sousa Silva
  */
+@Deprecated(forRemoval = true)//Se eu não marcar eu não lembro
 public class Sistema {
 
     private final Matriz dependentes, independentes;
@@ -27,8 +30,8 @@ public class Sistema {
             throw new IllegalArgumentException("a matriz dos termos independetes deve ter largura 1");
         }
 
-        this.dependentes = dependentes.clone();
-        this.independentes = independentes.clone();
+        this.dependentes = new Matriz(dependentes);
+        this.independentes = new Matriz(independentes);
         solucao = new Double[dependentes.obterLargura()];
     }
 
@@ -37,7 +40,7 @@ public class Sistema {
      * @return Uma cópia da matriz dos termos dependentes
      */
     public Matriz obterDependentes() {
-        return dependentes.clone();
+        return new Matriz(dependentes);
     }
 
     /**
@@ -45,7 +48,7 @@ public class Sistema {
      * @return Uma cópia dos termos independentes da matriz
      */
     public Matriz obterIndependentes() {
-        return independentes.clone();
+        return new Matriz(independentes);
     }
 
     /**
@@ -162,6 +165,20 @@ public class Sistema {
             }
         }
         return -1;
+    }
+
+    public int obterPivoParcial(int coluna) {
+        int m = dependentes.obterAltura();
+        double maior = 0;
+        int linha = -1;
+        for (int i = 0; i < m; i++) {
+            double valor = Math.abs(dependentes.obterValor(i, coluna));
+            if (valor > maior) {
+                linha = i;
+                maior = valor;
+            }
+        }
+        return linha;
     }
 
     private void substituicaoParaTras() {

@@ -18,7 +18,7 @@ public class DMatrixController {
     private final DMatrixView view;
 
     /**
-     * 
+     *
      * @param view A view associada a este controlador
      */
     public DMatrixController(DMatrixView view) {
@@ -27,6 +27,7 @@ public class DMatrixController {
 
     /**
      * Adciona uma matriz a coleção contida no controlador
+     *
      * @param chave A chave da matriz
      * @param matriz A matriz que será armazenada
      */
@@ -42,6 +43,7 @@ public class DMatrixController {
 
     /**
      * Obtém uma matriz a partir de sua chave
+     *
      * @param chave A chave que identifica a matriz
      * @return A matriz ou null caso ela não seja encontrada
      */
@@ -54,6 +56,7 @@ public class DMatrixController {
 
     /**
      * Remove uma matriz da coleção
+     *
      * @param chave A chave que indentifica a matriz
      * @return Retorna a matriz que foi removida
      */
@@ -70,6 +73,7 @@ public class DMatrixController {
 
     /**
      * Adciona um número a coleção
+     *
      * @param chave A chave que indentica o número
      * @param numero O numero a ser armazenado
      */
@@ -86,6 +90,7 @@ public class DMatrixController {
 
     /**
      * Obtém um número da coleção
+     *
      * @param chave A chave que identifica o número
      * @return O número ou null, caso não seja encontrado
      */
@@ -99,6 +104,7 @@ public class DMatrixController {
 
     /**
      * Remove um número da coleção
+     *
      * @param chave A chave que identifica o número
      * @return O número removido, ou null caso ele não seja encontrado
      */
@@ -116,6 +122,7 @@ public class DMatrixController {
 
     /**
      * Obtém uma matriz a partir de filtro dado
+     *
      * @param filtro A interface funcional que serve como filtro para selecionar
      * matrizes
      * @return Um mapa contendo as chaves e as matrizes aprovados pelo filtro
@@ -140,13 +147,14 @@ public class DMatrixController {
             removerMatriz(chave);
         }
     }
-    
+
     /**
      * Remove todos os números identificados pelos chaves dadas
+     *
      * @param chaves As chaves que indentificam os números que serão removidos
      */
-    public void removerNumeros(String[] chaves){
-        for(String chave : chaves){
+    public void removerNumeros(String[] chaves) {
+        for (String chave : chaves) {
             removerNumero(chave);
         }
     }

@@ -6,9 +6,10 @@ import java.util.Random;
  *
  * @author Diefesson de Sousa Silva
  */
-public class Matriz implements Cloneable {
+public class Matriz {
 
-    private final double[][] valores;
+    private double[][] valores;
+    private Matriz ampliada;
 
     /**
      *
@@ -22,28 +23,60 @@ public class Matriz implements Cloneable {
         valores = new double[m][n];
     }
 
+    public Matriz(int ordem) {
+        this(ordem, ordem);
+    }
+
     /**
      * OBS: esse construtor não copia a matriz dada
      *
      * @param valores os valores que serão usados nessa matriz
      */
     public Matriz(double[][] valores) {
-        int m = valores.length;
-        if (m == 0) {
-            throw new IllegalArgumentException("A altura da matriz não pode ser igual a zero");
-        }
-        int n = valores[0].length;
-        if (n == 0) {
-            throw new IllegalArgumentException("A largura da matriz não pode ser igual zero");
-        }
+        verificarValores(valores);
+        this.valores = valores;
+    }
 
-        for (int i = 1; i < valores.length; i++) {
-            if (valores[i].length != n) {
-                throw new IllegalArgumentException("O tamanho das colunas devem ser todos iguais");
+    /**
+     * Cria uma cópia de uma matriz já existente
+     *
+     * @param original A matriz original que será copiada
+     */
+    public Matriz(Matriz original) {
+        valores = new double[original.obterAltura()][original.obterLargura()];
+
+        for (int i = 0; i < valores.length; i++) {
+            for (int j = 0; j < valores[0].length; j++) {
+                valores[i][j] = original.valores[i][j];
             }
         }
+    }
 
+    /**
+     * *
+     * Define a matriz double[][] interna usada para guardar os valores
+     *
+     * @param valores A nova matriz de valores
+     */
+    public void definirValores(double[][] valores) {
         this.valores = valores;
+    }
+
+    /**
+     * *
+     *
+     * @return A matriz double[][] interna dessa classe
+     */
+    public double[][] obterValores() {
+        return valores;
+    }
+
+    public void definirAmpliada(Matriz ampliada) {
+        this.ampliada = ampliada;
+    }
+
+    public Matriz obterAmpliada() {
+        return ampliada;
     }
 
     public void definirValor(double valor, int i, int j) {
@@ -74,6 +107,30 @@ public class Matriz implements Cloneable {
      */
     public int obterLargura() {
         return valores[0].length;
+    }
+
+    /**
+     * Verifica se uma certa matriz double[][] é válida para ser usada em uma
+     * matriz
+     *
+     * @param valores A matriz que será verificada
+     * @throws IllegalArgumentException Caso a matriz não seja válida
+     */
+    public void verificarValores(double[][] valores) {
+        int m = valores.length;
+        if (m == 0) {
+            throw new IllegalArgumentException("A altura da matriz não pode ser igual a zero");
+        }
+        int n = valores[0].length;
+        if (n == 0) {
+            throw new IllegalArgumentException("A largura da matriz não pode ser igual zero");
+        }
+
+        for (int i = 1; i < valores.length; i++) {
+            if (valores[i].length != n) {
+                throw new IllegalArgumentException("O tamanho das colunas devem ser todos iguais");
+            }
+        }
     }
 
     /**
@@ -170,13 +227,16 @@ public class Matriz implements Cloneable {
      *
      * @param escalar o valor a ser somados a todas as células dessa matriz
      */
-    public void somaEscalar(double escalar) {
+    public void soma(double escalar) {
         int m = obterAltura();
         int n = obterLargura();
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 valores[i][j] += escalar;
             }
+        }
+        if (ampliada != null) {
+            ampliada.soma(escalar);
         }
     }
 
@@ -186,7 +246,7 @@ public class Matriz implements Cloneable {
      * @param outra A outra matriz para a operação de soma matricial
      * @throws IllegalArgumentException caso as matrizes não posssam ser somadas
      */
-    public void somaMatriz(Matriz outra) {
+    public void soma(Matriz outra) {
         int m = obterAltura();
         int n = obterLargura();
         if (m != outra.obterAltura() || n != outra.obterLargura()) {
@@ -198,19 +258,27 @@ public class Matriz implements Cloneable {
                 valores[i][j] += outra.obterValor(i, j);
             }
         }
+
+        if (ampliada != null && ampliada.obterAltura() == m && ampliada.obterLargura() == n) {
+            ampliada.soma(outra);
+        }
     }
 
     /**
      *
      * @param escalar O escalar a qual está matriz será multiplicado
      */
-    public void multiplicacaoEscalar(double escalar) {
+    public void multiplicar(double escalar) {
         int m = obterAltura();
         int n = obterLargura();
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 valores[i][j] *= escalar;
             }
+        }
+
+        if (ampliada != null) {
+            ampliada.multiplicar(escalar);
         }
     }
 
@@ -221,7 +289,7 @@ public class Matriz implements Cloneable {
      * @throws IllegalArgumentException Caso as matrizes não sejam
      * multiplicaveis
      */
-    public Matriz multiplicacao(Matriz outra) {
+    public Matriz multiplicar(Matriz outra) {
         Matriz saida = matrizParaMultiplicacao(outra);
 
         int m = saida.obterAltura();
@@ -262,58 +330,6 @@ public class Matriz implements Cloneable {
      */
     public boolean verificarMultiplicacao(Matriz outra) {
         return obterLargura() == outra.obterAltura();
-    }
-
-    public double valorDeMaiorModulo() {
-        double valor = 0;
-        int m = obterAltura();
-        int n = obterLargura();
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (Math.abs(valores[i][j]) > valor) {
-                    valor = valores[i][j];
-                }
-            }
-        }
-        return valor;
-    }
-
-    /**
-     * OBS veja Cloneable para mais informações
-     *
-     * @return Uma cópia profunda dessa matriz
-     */
-    @Override
-    public Matriz clone() {
-        int m = obterAltura();
-        int n = obterLargura();
-        double[][] cloneValores = new double[m][n];
-
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                cloneValores[i][j] = valores[i][j];
-            }
-        }
-
-        return new Matriz(cloneValores);
-    }
-
-    /**
-     *
-     * @param matriz a matriz a ser preechida
-     * @param min o valor mínimo(inclusivo)
-     * @param max o valor máximo(exclusivo)
-     */
-    public static void PreencherAleatorio(Matriz matriz, double min, double max) {
-        double delta = max - min;
-        Random r = new Random();
-        int m = matriz.obterAltura();
-        int n = matriz.obterLargura();
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                matriz.definirValor(min + delta * r.nextDouble(), i, j);
-            }
-        }
     }
 
     /**
@@ -445,19 +461,19 @@ public class Matriz implements Cloneable {
      *
      * @param m a altura da nova matriz
      * @param n a largura da nova matriz
-     * @return a nova matriz
      */
-    public Matriz redimensionar(int m, int n) {
-        Matriz nova = new Matriz(m, n);
+    public void redimensionar(int m, int n) {
         int ml = Math.min(m, obterAltura());
         int nl = Math.min(n, obterLargura());
 
+        double[][] original = valores;
+        valores = new double[m][n];
+
         for (int i = 0; i < ml; i++) {
             for (int j = 0; j < nl; j++) {
-                nova.definirValor(obterValor(i, j), i, j);
+                valores[i][j] = original[i][j];
             }
         }
-        return nova;
     }
 
     /**
@@ -487,7 +503,7 @@ public class Matriz implements Cloneable {
         double determinante = obterDeterminante();
 
         Matriz inversa = obterAdjunta();
-        inversa.multiplicacaoEscalar(1 / determinante);
+        inversa.multiplicar(1 / determinante);
 
         return inversa;
     }
@@ -542,7 +558,7 @@ public class Matriz implements Cloneable {
     /**
      * Prepara a matriz para que tenha 1 no canto superior esquerdo
      *
-     * @return Caso a matriz seja quadrada , este valor representará o
+     * @return Caso a matriz seja quadrada, este valor representará o
      * multiplicador do determinante para se obter o determinante original, caso
      * este valor seja 0, significa que não foi possivel preparar a matriz
      */
@@ -555,24 +571,20 @@ public class Matriz implements Cloneable {
                 return 0;
             }
         }
-        
-        System.out.println("pos:" + p);
-        
+
         if (p.obterI() != 0) {
-            System.out.println("linha trocada");
             trocarLinha(1, p.obterI());
             multiplicador *= -1;
         }
         if (p.obterJ() != 0) {
-            System.out.println("coluna trocada");
             trocarColuna(1, p.obterJ());
             multiplicador *= -1;
         }
 
-        if(valores[0][0] != 1){
+        if (valores[0][0] != 1) {
             double d = 1 / valores[0][0];
             multiplicador *= d;
-            for(int j = 0; j < valores[0].length; j++){
+            for (int j = 0; j < valores[0].length; j++) {
                 valores[1][j] *= d;
             }
         }
@@ -588,6 +600,10 @@ public class Matriz implements Cloneable {
             valores[i][a] = valores[i][b];
             valores[i][b] = t;
         }
+
+        if (ampliada != null) {
+            ampliada.trocarColuna(a, b);
+        }
     }
 
     public void trocarLinha(int a, int b) {
@@ -599,30 +615,164 @@ public class Matriz implements Cloneable {
             valores[a][j] = valores[b][j];
             valores[b][j] = t;
         }
+
+        if (ampliada != null) {
+            ampliada.trocarLinha(a, b);
+        }
     }
-    
+
     /**
-     * 
+     *
      * @param a a linha de origem
      * @param b a linha de destino
-     * @param multiplicador um valor a qual multiplicar a linha a antes de somar a b
+     * @param multiplicador um valor a qual multiplicar a linha a antes de somar
+     * a b
      */
-    public void somarLinha(int a, int b, double multiplicador){
-        for(int j = 0; j < valores[0].length; j++){
+    public void somarLinha(int a, int b, double multiplicador) {
+        for (int j = 0; j < valores[0].length; j++) {
             valores[b][j] += multiplicador * valores[a][j];
         }
+
+        if (ampliada != null) {
+            ampliada.somarLinha(a, b, multiplicador);
+        }
     }
-    
+
     /**
-     * 
+     *
      * @param a a coluna de origem
      * @param b a coluna de destino
-     * @param multiplicador um valor a qual multiplicar a coluna a antes de somar a b
+     * @param multiplicador um valor a qual multiplicar a coluna a antes de
+     * somar a b
      */
-    public void somarColuna(int a, int b, double multiplicador){
-        for(int i = 0; i < valores.length; i++){
+    public void somarColuna(int a, int b, double multiplicador) {
+        for (int i = 0; i < valores.length; i++) {
             valores[i][b] += multiplicador * valores[i][a];
         }
+    }
+
+    /**
+     * *
+     * Realiza uma operação de multiplicação de matrizes
+     *
+     * @param exp O expoente da multiplicação
+     * @return A matriz resultante
+     */
+    public Matriz potencia(int exp) {
+        if (!verificarQuadrada()) {
+            throw new IllegalStateException("a matriz deve ser quadrada para a operação de potência");
+        } else if (exp < 0) {
+            throw new IllegalArgumentException("o expoente deve ser >= 0");
+        }
+
+        if (exp == 0) {
+            return Matriz.gerarIdentidade(obterAltura());
+        }
+
+        Matriz m = this;
+        for (int i = 1; i < exp; i++) {
+            m = m.multiplicar(this);
+        }
+        return m;
+    }
+
+    public int linhasNaoNulas() {
+        int n = 0;
+        for (int i = 0, m = obterAltura(); i < m; i++) {
+            if (!linhaNula(i)) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    public boolean linhaNula(int i) {
+        if (i >= obterAltura()) {
+            throw new IllegalArgumentException("a linha " + i + "não existe");
+        }
+        for (int j = 0, n = obterLargura(); j < n; j++) {
+            if (valores[i][j] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int zerosInicioLinha(int i) {
+        int j = 0;
+        for (int m = obterAltura(); j < m; j++) {
+            if (valores[i][j] != 0) {
+                break;
+            }
+        }
+        return j;
+    }
+
+    public Matriz[] gauss() {
+        int m = obterAltura();
+        int n = obterLargura();
+        if (ampliada != null) {
+            if (ampliada.obterLargura() != 1) {
+                throw new IllegalStateException("a largura da matriz ampliada deve ser igual a 1");
+            } else if (ampliada.obterAltura() != m) {
+                throw new IllegalStateException("a altura da matriz ampliada deve ser igual");
+            }
+        }
+
+        int maior = Math.max(m, n);
+        Matriz p = Matriz.gerarIdentidade(maior);
+        Matriz l = Matriz.gerarIdentidade(maior);
+
+        for (int i = 0, j = 0; i < m && j < n; j++) {
+            int pivo = linhaPivo(j);//A linha do pivô
+            if (pivo != -1) {
+                trocarLinha(i, pivo);//Traz esses valores até a linha correta
+                p.trocarLinha(i, pivo);
+                eliminacaoGaussiana(i, j, DirecaoEliminacao.BAIXO, l);
+                i++;//avança para a próxima linha
+            }
+        }
+
+        return new Matriz[]{l, p};
+    }
+
+    public void eliminacaoGaussiana(int i, int j, DirecaoEliminacao direcao, Matriz l) {
+        if (valores[i][j] == 0) {
+            throw new IllegalArgumentException("o pivo não pode ser nulo");
+        } else if (direcao == null) {
+            throw new NullPointerException("a direção não pode ser null");
+        }
+
+        int m = obterAltura();
+
+        if (direcao.baixo()) {
+            for (int k = i + 1; k < m; k++) {
+                double razao = valores[k][j] / valores[i][j];
+                somarLinha(i, k, -razao);
+                if (l != null) {
+                    l.valores[k][j] = razao;
+                }
+            }
+        }
+
+        if (direcao.cima()) {
+            for (int k = 0; k < i; k++) {
+                double razao = valores[k][j] / valores[i][j];
+                somarLinha(i, k, -razao);
+                if (l != null) {
+                    l.valores[k][j] = razao;
+                }
+            }
+        }
+    }
+
+    public int linhaPivo(int coluna) {
+        for (int i = 0, m = obterAltura(); i < m; i++) {
+            if (zerosInicioLinha(i) == coluna) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -665,5 +815,29 @@ public class Matriz implements Cloneable {
      */
     public static double sinalCofator(int i, int j) {
         return ((i + j) % 2 == 0) ? 1f : -1f;
+    }
+
+    /**
+     *
+     * @param matriz a matriz a ser preechida
+     * @param min o valor mínimo(inclusivo)
+     * @param max o valor máximo(exclusivo)
+     */
+    public static void PreencherAleatorio(Matriz matriz, double min, double max) {
+        if (min > max) {
+            double t = min;
+            min = max;
+            max = t;
+        }
+
+        double delta = max - min;
+        Random r = new Random();
+        int m = matriz.obterAltura();
+        int n = matriz.obterLargura();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                matriz.definirValor(r.nextDouble() * delta + min, i, j);
+            }
+        }
     }
 }
