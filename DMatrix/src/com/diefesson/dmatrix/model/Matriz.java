@@ -501,6 +501,9 @@ public class Matriz {
 
     public Matriz obterInversa() {
         double determinante = obterDeterminante();
+        if(determinante == 0){
+            return null;
+        }
 
         Matriz inversa = obterAdjunta();
         inversa.multiplicar(1 / determinante);
@@ -766,7 +769,7 @@ public class Matriz {
         }
     }
 
-    public int linhaPivo(int coluna) {
+    private int linhaPivo(int coluna) {
         for (int i = 0, m = obterAltura(); i < m; i++) {
             if (zerosInicioLinha(i) == coluna) {
                 return i;
@@ -822,8 +825,9 @@ public class Matriz {
      * @param matriz a matriz a ser preechida
      * @param min o valor mínimo(inclusivo)
      * @param max o valor máximo(exclusivo)
+     * @param arredontar arredonta para menor os valores gerados
      */
-    public static void PreencherAleatorio(Matriz matriz, double min, double max) {
+    public static void PreencherAleatorio(Matriz matriz, double min, double max, boolean arredontar) {
         if (min > max) {
             double t = min;
             min = max;
@@ -836,7 +840,10 @@ public class Matriz {
         int n = matriz.obterLargura();
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                matriz.definirValor(r.nextDouble() * delta + min, i, j);
+                double v = r.nextDouble() * delta + min;
+                if(arredontar)
+                    v = Math.floor(v);
+                matriz.definirValor(v, i, j);
             }
         }
     }

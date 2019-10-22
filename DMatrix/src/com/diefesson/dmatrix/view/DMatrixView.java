@@ -1,6 +1,6 @@
 package com.diefesson.dmatrix.view;
 
-import com.diefesson.dmatrix.control.DMatrixController;
+import com.diefesson.dmatrix.control.DMatrixControl;
 import com.diefesson.dmatrix.control.EditorMatrizControl;
 import com.diefesson.dmatrix.control.EditorNumeroControl;
 import com.diefesson.dmatrix.model.Matriz;
@@ -25,9 +25,11 @@ public class DMatrixView extends javax.swing.JFrame {
         rolamentoMatrizes = new javax.swing.JScrollPane();
         listaMatrizes = new javax.swing.JList<>();
         rolamentoNumeros = new javax.swing.JScrollPane();
-        tabelaNumeros = new javax.swing.JTable();
+        tabelaEscalares = new javax.swing.JTable();
         barraDeMenu = new javax.swing.JMenuBar();
         menuArquivo = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         menuMatrizes = new javax.swing.JMenu();
         menuNovaMatriz = new javax.swing.JMenuItem();
         menuRenomearMatriz = new javax.swing.JMenuItem();
@@ -38,20 +40,24 @@ public class DMatrixView extends javax.swing.JFrame {
         menuMultiplicarMatriz = new javax.swing.JMenuItem();
         separadorMatriz2 = new javax.swing.JPopupMenu.Separator();
         menuTransposta = new javax.swing.JMenuItem();
-        menuComplement = new javax.swing.JMenuItem();
+        menuComplemento = new javax.swing.JMenuItem();
         menuCofatora = new javax.swing.JMenuItem();
         menuAdjunta = new javax.swing.JMenuItem();
         menuInversa = new javax.swing.JMenuItem();
         separadorMatriz3 = new javax.swing.JPopupMenu.Separator();
         menuFatoracao = new javax.swing.JMenuItem();
+        menuAmpliada = new javax.swing.JMenu();
+        menuCriarAmpliada = new javax.swing.JMenuItem();
+        menuRemover = new javax.swing.JMenuItem();
         menuNumeros = new javax.swing.JMenu();
         menuNovoNumero = new javax.swing.JMenuItem();
         menuRenomearNumero = new javax.swing.JMenuItem();
         menuEditarNumero = new javax.swing.JMenuItem();
         menuRemoverNumeros = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
         menuOperacoes = new javax.swing.JMenu();
         menuDeterminante = new javax.swing.JMenuItem();
-        menuJavaScript = new javax.swing.JMenu();
+        menuScript = new javax.swing.JMenu();
         menuAjuda = new javax.swing.JMenu();
         menuSair = new javax.swing.JMenu();
 
@@ -71,7 +77,7 @@ public class DMatrixView extends javax.swing.JFrame {
         );
         rolamentoMatrizes.setViewportView(listaMatrizes);
 
-        tabelaNumeros.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaEscalares.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -82,19 +88,33 @@ public class DMatrixView extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.Double.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        rolamentoNumeros.setViewportView(tabelaNumeros);
+        rolamentoNumeros.setViewportView(tabelaEscalares);
 
         menuArquivo.setText("Arquivo");
+
+        jMenuItem1.setText("Salvar");
+        menuArquivo.add(jMenuItem1);
+
+        jMenuItem2.setText("Carregar");
+        menuArquivo.add(jMenuItem2);
+
         barraDeMenu.add(menuArquivo);
 
         menuMatrizes.setText("Matrizes");
 
-        menuNovaMatriz.setText("Nova matriz");
+        menuNovaMatriz.setText("Nova");
         menuNovaMatriz.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuNovaMatrizActionPerformed(evt);
@@ -145,25 +165,75 @@ public class DMatrixView extends javax.swing.JFrame {
         menuMatrizes.add(separadorMatriz2);
 
         menuTransposta.setText("Transposta");
+        menuTransposta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuTranspostaActionPerformed(evt);
+            }
+        });
         menuMatrizes.add(menuTransposta);
 
-        menuComplement.setText("Complemento");
-        menuMatrizes.add(menuComplement);
+        menuComplemento.setText("Complemento");
+        menuComplemento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuComplementoActionPerformed(evt);
+            }
+        });
+        menuMatrizes.add(menuComplemento);
 
         menuCofatora.setText("Cofatora");
+        menuCofatora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCofatoraActionPerformed(evt);
+            }
+        });
         menuMatrizes.add(menuCofatora);
 
         menuAdjunta.setText("Adjunta");
+        menuAdjunta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAdjuntaActionPerformed(evt);
+            }
+        });
         menuMatrizes.add(menuAdjunta);
 
         menuInversa.setText("Inversa");
+        menuInversa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuInversaActionPerformed(evt);
+            }
+        });
         menuMatrizes.add(menuInversa);
         menuMatrizes.add(separadorMatriz3);
 
         menuFatoracao.setText("Fatoração PLU");
+        menuFatoracao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuFatoracaoActionPerformed(evt);
+            }
+        });
         menuMatrizes.add(menuFatoracao);
 
         barraDeMenu.add(menuMatrizes);
+
+        menuAmpliada.setText("Ampliada");
+
+        menuCriarAmpliada.setText("Criar/editar");
+        menuCriarAmpliada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCriarAmpliadaActionPerformed(evt);
+            }
+        });
+        menuAmpliada.add(menuCriarAmpliada);
+
+        menuRemover.setText("Remover");
+        menuRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRemoverActionPerformed(evt);
+            }
+        });
+        menuAmpliada.add(menuRemover);
+
+        barraDeMenu.add(menuAmpliada);
 
         menuNumeros.setText("Escalares");
 
@@ -176,6 +246,11 @@ public class DMatrixView extends javax.swing.JFrame {
         menuNumeros.add(menuNovoNumero);
 
         menuRenomearNumero.setText("Renomear");
+        menuRenomearNumero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRenomearNumeroActionPerformed(evt);
+            }
+        });
         menuNumeros.add(menuRenomearNumero);
 
         menuEditarNumero.setText("Editar escalar");
@@ -196,6 +271,9 @@ public class DMatrixView extends javax.swing.JFrame {
 
         barraDeMenu.add(menuNumeros);
 
+        jMenu1.setText("Sistemas");
+        barraDeMenu.add(jMenu1);
+
         menuOperacoes.setText("Operações");
 
         menuDeterminante.setText("Determinante");
@@ -208,8 +286,13 @@ public class DMatrixView extends javax.swing.JFrame {
 
         barraDeMenu.add(menuOperacoes);
 
-        menuJavaScript.setText("Groovy");
-        barraDeMenu.add(menuJavaScript);
+        menuScript.setText("Script");
+        menuScript.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuScriptMouseClicked(evt);
+            }
+        });
+        barraDeMenu.add(menuScript);
 
         menuAjuda.setText("Ajuda");
         barraDeMenu.add(menuAjuda);
@@ -231,14 +314,13 @@ public class DMatrixView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rolamentoMatrizes, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                    .addComponent(rolamentoMatrizes, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textoMatrizes)
                             .addComponent(textoNumeros)
                             .addComponent(rolamentoNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addGap(1, 1, 1)))
-                .addContainerGap())
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,11 +328,11 @@ public class DMatrixView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(textoMatrizes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rolamentoMatrizes, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                .addComponent(rolamentoMatrizes, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(textoNumeros)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rolamentoNumeros, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
+                .addComponent(rolamentoNumeros, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -258,9 +340,9 @@ public class DMatrixView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuNovaMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNovaMatrizActionPerformed
-        EditorMatrizView editor = new EditorMatrizView(controller);
+        EditorMatrizView editor = new EditorMatrizView(control, true);
         editor.obterController().definirAoSalvar((nome, matriz) -> {
-            controller.adcionarMatriz(nome, matriz);
+            control.adcionarMatriz(nome, matriz);
         });
         editor.setVisible(true);
     }//GEN-LAST:event_menuNovaMatrizActionPerformed
@@ -282,7 +364,7 @@ public class DMatrixView extends javax.swing.JFrame {
             chaves[i] = modeloMatrizes.getElementAt(selecionados[i]);
         }
 
-        controller.removerMatrizes(chaves);
+        control.removerMatrizes(chaves);
     }//GEN-LAST:event_menuRemoverMatrizesActionPerformed
 
     private void menuEditarMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarMatrizActionPerformed
@@ -291,34 +373,34 @@ public class DMatrixView extends javax.swing.JFrame {
             return;
         }
         String chave = modeloMatrizes.getElementAt(indice);
-        EditorMatrizView ev = new EditorMatrizView(controller);
+        EditorMatrizView ev = new EditorMatrizView(control, true);
         EditorMatrizControl ec = ev.obterController();
         ec.carregar(chave);
         ev.setVisible(true);
     }//GEN-LAST:event_menuEditarMatrizActionPerformed
 
     private void menuNovoNumeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNovoNumeroActionPerformed
-        EditorNumeroView ev = new EditorNumeroView(controller);
+        EditorNumeroView ev = new EditorNumeroView(control);
         ev.setVisible(true);
     }//GEN-LAST:event_menuNovoNumeroActionPerformed
 
     private void menuRemoverNumerosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRemoverNumerosActionPerformed
-        int[] indices = tabelaNumeros.getSelectedRows();
+        int[] indices = tabelaEscalares.getSelectedRows();
 
         for (int i : indices) {
-            String chave = (String) modeloNumeros.getValueAt(i, 0);
-            controller.removerNumero(chave);
+            String chave = (String) modeloEscalares.getValueAt(i, 0);
+            control.removerNumero(chave);
         }
     }//GEN-LAST:event_menuRemoverNumerosActionPerformed
 
     private void menuEditarNumeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarNumeroActionPerformed
-        int indice = tabelaNumeros.getSelectedRow();
+        int indice = tabelaEscalares.getSelectedRow();
         if (indice == -1) {
             return;
         }
 
-        String chave = (String) modeloNumeros.getValueAt(indice, 0);
-        EditorNumeroView ev = new EditorNumeroView(controller);
+        String chave = (String) modeloEscalares.getValueAt(indice, 0);
+        EditorNumeroView ev = new EditorNumeroView(control);
         EditorNumeroControl ec = ev.obterController();
         ec.carregar(chave);
         ev.setVisible(true);
@@ -328,10 +410,10 @@ public class DMatrixView extends javax.swing.JFrame {
         int indice = listaMatrizes.getSelectedIndex();
         if (indice != -1) {
             String nome = listaMatrizes.getSelectedValue();
-            Matriz m = controller.obterMatriz(nome);
+            Matriz m = control.obterMatriz(nome);
 
             if (m.verificarQuadrada()) {
-                controller.adcionarNumero("determinante de " + nome, m.obterDeterminante());
+                control.adcionarNumero("determinante de " + nome, m.obterDeterminante());
             } else {
                 JOptionPane.showMessageDialog(this, "A matriz deve ser quadrada");
             }
@@ -342,20 +424,20 @@ public class DMatrixView extends javax.swing.JFrame {
 
     private void menuMultiplicarMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuMultiplicarMatrizActionPerformed
         int[] indices = listaMatrizes.getSelectedIndices();
-        if(indices.length < 2){
+        if (indices.length < 2) {
             JOptionPane.showMessageDialog(this, "Selecione ao menos duas matrizes");
             return;
         }
-        
+
         String nome1 = modeloMatrizes.elementAt(indices[0]);
         String nome2 = modeloMatrizes.elementAt(indices[1]);
-        
-        Matriz m1 = controller.obterMatriz(nome1);
-        Matriz m2 = controller.obterMatriz(nome2);
-        
-        if(m1.obterAltura() == m2.obterAltura() && m1.obterLargura() == m2.obterLargura()){
+
+        Matriz m1 = control.obterMatriz(nome1);
+        Matriz m2 = control.obterMatriz(nome2);
+
+        if (m1.obterLargura() == m2.obterAltura()) {
             Matriz mul = m1.multiplicar(m2);
-            controller.adcionarMatriz((nome1 + " * " + nome2), mul);
+            control.adcionarMatriz((nome1 + " * " + nome2), mul);
         } else {
             JOptionPane.showMessageDialog(this, "As matrizes devem ter o mesmo tamanho");
         }
@@ -363,41 +445,199 @@ public class DMatrixView extends javax.swing.JFrame {
 
     private void menuRenomearMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRenomearMatrizActionPerformed
         int indice = listaMatrizes.getSelectedIndex();
-        if(indice == -1)
+        if (indice == -1) {
             return;
-        
+        }
+
         String nome = modeloMatrizes.elementAt(indice);
         String novoNome = JOptionPane.showInputDialog(this, "novo nome de " + nome);
-        
-        if(novoNome == null)
+
+        if (novoNome == null) {
             return;
-        
-        Matriz m = controller.obterMatriz(nome);
-        controller.removerMatriz(nome);
-        controller.adcionarMatriz(novoNome, m);
+        }
+
+        Matriz m = control.obterMatriz(nome);
+        control.removerMatriz(nome);
+        control.adcionarMatriz(novoNome, m);
     }//GEN-LAST:event_menuRenomearMatrizActionPerformed
 
     private void menuSomarMatrizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSomarMatrizActionPerformed
         int[] indices = listaMatrizes.getSelectedIndices();
-        if(indices.length < 2){
+        if (indices.length < 2) {
             JOptionPane.showMessageDialog(this, "Selecione ao menos duas matrizes");
             return;
         }
-        
+
         String nome1 = modeloMatrizes.elementAt(indices[0]);
         String nome2 = modeloMatrizes.elementAt(indices[1]);
-        
-        Matriz m1 = controller.obterMatriz(nome1);
-        Matriz m2 = controller.obterMatriz(nome2);
-        
-        if(m1.obterAltura() == m2.obterAltura() && m1.obterLargura() == m2.obterLargura()){
+
+        Matriz m1 = control.obterMatriz(nome1);
+        Matriz m2 = control.obterMatriz(nome2);
+
+        if (m1.obterAltura() == m2.obterAltura() && m1.obterLargura() == m2.obterLargura()) {
             Matriz soma = new Matriz(m1);
             soma.soma(m2);
-            controller.adcionarMatriz((nome1 + " + " + nome2), soma);
+            control.adcionarMatriz((nome1 + " + " + nome2), soma);
         } else {
             JOptionPane.showMessageDialog(this, "As matrizes devem ter o mesmo tamanho");
         }
     }//GEN-LAST:event_menuSomarMatrizActionPerformed
+
+    private void menuTranspostaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTranspostaActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if (indice == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione pelo menos uma matriz");
+            return;
+        }
+
+        String nome = modeloMatrizes.get(indice);
+        Matriz m = control.obterMatriz(nome);
+        Matriz t = m.obterTransposta();
+        control.adcionarMatriz("transposta de " + nome, t);
+    }//GEN-LAST:event_menuTranspostaActionPerformed
+
+    private void menuComplementoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuComplementoActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if (indice == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione pelo menos uma matriz");
+            return;
+        }
+
+        String nome = modeloMatrizes.get(indice);
+        Matriz m = control.obterMatriz(nome);
+        if (m.verificarQuadrada()) {
+            Matriz c = m.obterMatrizComplemento();
+            control.adcionarMatriz("complemento de " + nome, c);
+        } else {
+            JOptionPane.showMessageDialog(this, "A matriz deve ser quadrada");
+        }
+    }//GEN-LAST:event_menuComplementoActionPerformed
+
+    private void menuCofatoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCofatoraActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if (indice == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione pelo menos uma matriz");
+            return;
+        }
+
+        String nome = modeloMatrizes.get(indice);
+        Matriz m = control.obterMatriz(nome);
+        if (m.verificarQuadrada()) {
+            Matriz c = m.obterMatrizCofator();
+            control.adcionarMatriz("cofatora de " + nome, c);
+        } else {
+            JOptionPane.showMessageDialog(this, "A matriz deve ser quadrada");
+        }
+    }//GEN-LAST:event_menuCofatoraActionPerformed
+
+    private void menuAdjuntaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAdjuntaActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if (indice == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione pelo menos uma matriz");
+            return;
+        }
+
+        String nome = modeloMatrizes.get(indice);
+        Matriz m = control.obterMatriz(nome);
+        if (m.verificarQuadrada()) {
+            Matriz a = m.obterAdjunta();
+            control.adcionarMatriz("adjunta de " + nome, a);
+        } else {
+            JOptionPane.showMessageDialog(this, "A matriz deve ser quadrada");
+        }
+    }//GEN-LAST:event_menuAdjuntaActionPerformed
+
+    private void menuInversaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuInversaActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if (indice == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione pelo menos uma matriz");
+            return;
+        }
+
+        String nome = modeloMatrizes.get(indice);
+        Matriz m = control.obterMatriz(nome);
+        if (m.verificarQuadrada()) {
+            Matriz i = m.obterInversa();
+            if (i != null) {
+                control.adcionarMatriz("inversa de " + nome, i);
+            } else {
+                JOptionPane.showMessageDialog(this, "A matriz " + nome + " não tem inversa");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "A matriz deve ser quadrada");
+        }
+    }//GEN-LAST:event_menuInversaActionPerformed
+
+    private void menuFatoracaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuFatoracaoActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if (indice == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione pelo menos uma matriz");
+            return;
+        }
+
+        String nome = modeloMatrizes.get(indice);
+        Matriz m = control.obterMatriz(nome);
+
+        Matriz u = new Matriz(m);
+        Matriz[] ret = u.gauss();
+        Matriz l = ret[0];
+        Matriz p = ret[1];
+
+        control.adcionarMatriz("fator p de " + nome, p);
+        control.adcionarMatriz("fator l de " + nome, l);
+        control.adcionarMatriz("fator u de " + nome, u);
+    }//GEN-LAST:event_menuFatoracaoActionPerformed
+
+    private void menuRenomearNumeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRenomearNumeroActionPerformed
+        int indice = tabelaEscalares.getSelectedRow();
+        if (indice == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione pelo menos um escalar");
+            return;
+        }
+
+        String nome = (String) modeloEscalares.getValueAt(indice, 0);
+        String novoNome = JOptionPane.showInputDialog(this, "Qual o novo de " + nome);
+
+        if (novoNome != null) {
+            double numero = control.obterNumero(nome);
+            control.removerNumero(nome);
+            control.adcionarNumero(novoNome, numero);
+        }
+
+    }//GEN-LAST:event_menuRenomearNumeroActionPerformed
+
+    private void menuCriarAmpliadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCriarAmpliadaActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if (indice == -1) {
+            return;
+        }
+
+        String nome = modeloMatrizes.get(indice);
+        Matriz matriz = control.obterMatriz(nome);
+        Matriz ampliada = matriz.obterAmpliada();
+        if(ampliada == null){
+            ampliada = new Matriz(matriz.obterAltura(), 1);
+            matriz.definirAmpliada(ampliada);
+        }
+        EditorMatrizView editor = new EditorMatrizView(control, false);
+        EditorMatrizControl ceditor = editor.obterController();
+        ceditor.carregar(ampliada);
+        editor.setVisible(true);
+    }//GEN-LAST:event_menuCriarAmpliadaActionPerformed
+
+    private void menuRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRemoverActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if(indice == -1){
+            return;
+        }
+        
+        String nome = modeloMatrizes.get(indice);
+        control.obterMatriz(nome).definirAmpliada(null);
+    }//GEN-LAST:event_menuRemoverActionPerformed
+
+    private void menuScriptMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuScriptMouseClicked
+        new GroovyView(control).setVisible(true);
+    }//GEN-LAST:event_menuScriptMouseClicked
 
     public static void main(String args[]) {
         try {
@@ -421,29 +661,35 @@ public class DMatrixView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraDeMenu;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JList<String> listaMatrizes;
     private javax.swing.JMenuItem menuAdjunta;
     private javax.swing.JMenu menuAjuda;
+    private javax.swing.JMenu menuAmpliada;
     private javax.swing.JMenu menuArquivo;
     private javax.swing.JMenuItem menuCofatora;
-    private javax.swing.JMenuItem menuComplement;
+    private javax.swing.JMenuItem menuComplemento;
+    private javax.swing.JMenuItem menuCriarAmpliada;
     private javax.swing.JMenuItem menuDeterminante;
     private javax.swing.JMenuItem menuEditarMatriz;
     private javax.swing.JMenuItem menuEditarNumero;
     private javax.swing.JMenuItem menuFatoracao;
     private javax.swing.JMenuItem menuInversa;
-    private javax.swing.JMenu menuJavaScript;
     private javax.swing.JMenu menuMatrizes;
     private javax.swing.JMenuItem menuMultiplicarMatriz;
     private javax.swing.JMenuItem menuNovaMatriz;
     private javax.swing.JMenuItem menuNovoNumero;
     private javax.swing.JMenu menuNumeros;
     private javax.swing.JMenu menuOperacoes;
+    private javax.swing.JMenuItem menuRemover;
     private javax.swing.JMenuItem menuRemoverMatrizes;
     private javax.swing.JMenuItem menuRemoverNumeros;
     private javax.swing.JMenuItem menuRenomearMatriz;
     private javax.swing.JMenuItem menuRenomearNumero;
     private javax.swing.JMenu menuSair;
+    private javax.swing.JMenu menuScript;
     private javax.swing.JMenuItem menuSomarMatriz;
     private javax.swing.JMenuItem menuTransposta;
     private javax.swing.JScrollPane rolamentoMatrizes;
@@ -451,24 +697,24 @@ public class DMatrixView extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator separadorMatriz1;
     private javax.swing.JPopupMenu.Separator separadorMatriz2;
     private javax.swing.JPopupMenu.Separator separadorMatriz3;
-    private javax.swing.JTable tabelaNumeros;
+    private javax.swing.JTable tabelaEscalares;
     private javax.swing.JLabel textoMatrizes;
     private javax.swing.JLabel textoNumeros;
     // End of variables declaration//GEN-END:variables
 
     private final DefaultListModel<String> modeloMatrizes;
-    private final DefaultTableModel modeloNumeros;
-    private final DMatrixController controller;
+    private final DefaultTableModel modeloEscalares;
+    private final DMatrixControl control;
 
     public DMatrixView() {
         initComponents();
-        controller = new DMatrixController(this);
+        control = new DMatrixControl(this);
         modeloMatrizes = (DefaultListModel<String>) listaMatrizes.getModel();
-        modeloNumeros = (DefaultTableModel) tabelaNumeros.getModel();
+        modeloEscalares = (DefaultTableModel) tabelaEscalares.getModel();
     }
 
-    public DMatrixController getController() {
-        return controller;
+    public DMatrixControl getControl() {
+        return control;
     }
 
     public void emMatrizAdcionada(String chave, Matriz matriz, Matriz velha) {
@@ -490,26 +736,26 @@ public class DMatrixView extends javax.swing.JFrame {
         SwingUtilities.invokeLater(() -> {
             if (velho != null) {
                 int indice = -1;
-                int linhas = modeloNumeros.getRowCount();
+                int linhas = modeloEscalares.getRowCount();
                 for (int i = 0; i < linhas; i++) {
-                    if (chave.equals(modeloNumeros.getValueAt(i, 0))) {
+                    if (chave.equals(modeloEscalares.getValueAt(i, 0))) {
                         indice = i;
                         break;
                     }
                 }
-                modeloNumeros.setValueAt(numero, indice, 1);
+                modeloEscalares.setValueAt(numero, indice, 1);
             } else {
-                modeloNumeros.addRow(new Object[]{chave, numero});
+                modeloEscalares.addRow(new Object[]{chave, numero});
             }
         });
     }
 
     public void emNumeroRemovido(String chave, Double numero) {
         SwingUtilities.invokeLater(() -> {
-            for (int i = 0; i < modeloNumeros.getRowCount(); i++) {
-                String c = (String) modeloNumeros.getValueAt(i, 0);
+            for (int i = 0; i < modeloEscalares.getRowCount(); i++) {
+                String c = (String) modeloEscalares.getValueAt(i, 0);
                 if (c.equals(chave)) {
-                    modeloNumeros.removeRow(i);
+                    modeloEscalares.removeRow(i);
                     break;
                 }
             }

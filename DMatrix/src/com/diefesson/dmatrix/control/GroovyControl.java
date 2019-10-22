@@ -1,5 +1,6 @@
 package com.diefesson.dmatrix.control;
 
+import com.diefesson.dmatrix.view.GroovyView;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import java.io.IOException;
@@ -15,10 +16,11 @@ import java.util.function.Consumer;
  */
 public class GroovyControl {
 
+    private final DMatrixControl dmControl;
+    private final GroovyView view;
+
     private String script = "";
-    private volatile boolean execuntando = false;
-    private Consumer<GroovyControl> aoTerminar;
-    private final DMatrixController dmControl;
+    private volatile boolean executando = false;
     private final Binding variaveis;
     private final GroovyShell shell;
 
@@ -27,16 +29,18 @@ public class GroovyControl {
     private final PipedWriter entrada;
     private final PipedReader entradaShell;
 
-    public GroovyControl(DMatrixController dmControl) throws IOException {
+    public GroovyControl(DMatrixControl dmControl, GroovyView view) throws IOException {
         this.dmControl = dmControl;
+        this.view = view;
+        
         variaveis = new Binding();
         shell = new GroovyShell(variaveis);
 
         saida = new PipedReader();
         saidaShell = new PipedWriter(saida);
-
         entrada = new PipedWriter();
         entradaShell = new PipedReader(entrada);
+        
         reiniciar();
     }
 
@@ -60,11 +64,11 @@ public class GroovyControl {
 
     public void executar(boolean async) {
         Thread thread = new Thread(() -> {
-            execuntando = true;
+            executando = true;
             shell.evaluate(script);
-            execuntando = false;
-            if (aoTerminar != null) {
-                aoTerminar.accept(this);
+            executando = false;
+            if (view != null) {
+                view.aoTerminar();
             }
         });
 
@@ -73,6 +77,10 @@ public class GroovyControl {
         } else {
             thread.run();
         }
+    }
+
+    public boolean executando() {
+        return executando;
     }
 
     public Reader obterSaida() {
@@ -84,8 +92,8 @@ public class GroovyControl {
     }
 
     public static void main(String[] args) throws IOException {
-        DMatrixController dmc = new DMatrixController(null);
-        GroovyControl gc = new GroovyControl(dmc);
+        DMatrixControl dmc = new DMatrixControl(null);
+        GroovyControl gc = new GroovyControl(dmc, null);
 
         String script = "import com.diefesson.dmatrix.model.Matriz\n"
                 + "dmControl.adcionarMatriz(\"matriz 1\", new Matriz(2, 2))";

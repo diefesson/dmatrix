@@ -1,6 +1,6 @@
 package com.diefesson.dmatrix.view;
 
-import com.diefesson.dmatrix.control.DMatrixController;
+import com.diefesson.dmatrix.control.DMatrixControl;
 import com.diefesson.dmatrix.control.EditorMatrizControl;
 import com.diefesson.dmatrix.model.Matriz;
 import javax.swing.table.DefaultTableModel;
@@ -32,10 +32,10 @@ public class EditorMatrizView extends javax.swing.JFrame {
         campoNome = new javax.swing.JTextField();
         botaoSalvar = new javax.swing.JButton();
         botaoRedimensionar = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        menuBar = new javax.swing.JMenuBar();
+        menuCriar = new javax.swing.JMenu();
+        menuCriarIdentidade = new javax.swing.JMenuItem();
+        menuCriarAleatoria = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -61,9 +61,7 @@ public class EditorMatrizView extends javax.swing.JFrame {
         tabelaValores.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(tabelaValores);
 
-        textoNome.setText("Nome da matriz:");
-
-        campoNome.setText("minha matriz");
+        textoNome.setText("Nome");
 
         botaoSalvar.setText("SALVAR");
         botaoSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -79,27 +77,27 @@ public class EditorMatrizView extends javax.swing.JFrame {
             }
         });
 
-        jMenu1.setText("Matriz especial");
+        menuCriar.setText("Criar");
 
-        jMenuItem1.setText("Matriz identidade");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        menuCriarIdentidade.setText("Matriz identidade");
+        menuCriarIdentidade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                menuCriarIdentidadeActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        menuCriar.add(menuCriarIdentidade);
 
-        jMenuItem2.setText("Matriz aleatória");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        menuCriarAleatoria.setText("Matriz aleatória");
+        menuCriarAleatoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                menuCriarAleatoriaActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        menuCriar.add(menuCriarAleatoria);
 
-        jMenuBar1.add(jMenu1);
+        menuBar.add(menuCriar);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -107,27 +105,26 @@ public class EditorMatrizView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textoColunas)
-                    .addComponent(textoLinhas))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spinnerLinhas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinnerColunas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botaoRedimensionar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(textoNome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textoColunas)
+                            .addComponent(textoLinhas, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(botaoSalvar))
-                    .addComponent(campoNome))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(spinnerColunas)
+                            .addComponent(spinnerLinhas))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botaoRedimensionar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(textoNome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(botaoSalvar))
+                            .addComponent(campoNome))))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jScrollPane1)
-                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,9 +146,9 @@ public class EditorMatrizView extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(campoNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(botaoRedimensionar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(botaoRedimensionar, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -171,22 +168,22 @@ public class EditorMatrizView extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void menuCriarIdentidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCriarIdentidadeActionPerformed
         int ordem = (int) spinnerLinhas.getValue();
         controller.definirMatriz(Matriz.gerarIdentidade(ordem));
         atualizarView();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_menuCriarIdentidadeActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void menuCriarAleatoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCriarAleatoriaActionPerformed
         int m = (int) spinnerLinhas.getValue();
         int n = (int) spinnerColunas.getValue();
 
         Matriz matriz = new Matriz(m, n);
-        Matriz.PreencherAleatorio(matriz, -10, 11);
+        Matriz.PreencherAleatorio(matriz, -10, 11, true);
         controller.definirMatriz(matriz);
 
         atualizarView();
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_menuCriarAleatoriaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -219,7 +216,7 @@ public class EditorMatrizView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EditorMatrizView(new DMatrixController(null)).setVisible(true);
+                new EditorMatrizView(new DMatrixControl(null), true).setVisible(true);
             }
         });
     }
@@ -228,11 +225,11 @@ public class EditorMatrizView extends javax.swing.JFrame {
     private javax.swing.JButton botaoRedimensionar;
     private javax.swing.JButton botaoSalvar;
     private javax.swing.JTextField campoNome;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuCriar;
+    private javax.swing.JMenuItem menuCriarAleatoria;
+    private javax.swing.JMenuItem menuCriarIdentidade;
     private javax.swing.JSpinner spinnerColunas;
     private javax.swing.JSpinner spinnerLinhas;
     private javax.swing.JTable tabelaValores;
@@ -243,18 +240,16 @@ public class EditorMatrizView extends javax.swing.JFrame {
 
     private final EditorMatrizControl controller;
     private final DefaultTableModel modeloValores;
-
-    /**
-     * Creates new form EditorView
-     *
-     * @param dmController o controlador do dmatrix para ser usado
-     */
-    public EditorMatrizView(DMatrixController dmController) {
+    
+    
+    public EditorMatrizView(DMatrixControl dmController, boolean renomeavel) {
         initComponents();
 
         controller = new EditorMatrizControl(dmController, this);
         modeloValores = new TabelaNumeros();
         tabelaValores.setModel(modeloValores);
+        
+        campoNome.setEnabled(renomeavel);
 
         atualizarView();
     }

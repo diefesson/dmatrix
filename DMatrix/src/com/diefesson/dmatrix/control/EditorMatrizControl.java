@@ -11,7 +11,7 @@ import java.util.function.BiConsumer;
 public class EditorMatrizControl {
 
     private final EditorMatrizView view;
-    private final DMatrixController dmController;
+    private final DMatrixControl dmController;
     private Matriz matriz = new Matriz(1, 1);
     private String nome = "";
     private BiConsumer<String, Matriz> aoSalvar;
@@ -21,7 +21,7 @@ public class EditorMatrizControl {
      * @param dmController O DMatrixController que será associado a essa matriz
      * @param view A view que será associada a essa matriz, pode ser null
      */
-    public EditorMatrizControl(DMatrixController dmController, EditorMatrizView view) {
+    public EditorMatrizControl(DMatrixControl dmController, EditorMatrizView view) {
         if (dmController == null) {
             throw new NullPointerException("dmController não pode ser null");
         }
@@ -33,7 +33,7 @@ public class EditorMatrizControl {
      *
      * @return O DMatrixController associado a este controle
      */
-    public DMatrixController obterDMController() {
+    public DMatrixControl obterDMController() {
         return dmController;
     }
 
@@ -134,6 +134,16 @@ public class EditorMatrizControl {
         }
         this.matriz = matriz;
         this.nome = nome;
+        if (view != null) {
+            view.emCarregado();
+        }
+    }
+    
+    public void carregar(Matriz matriz) {
+        if (matriz == null) {
+            throw new NullPointerException("a matriz poder ser null");
+        }
+        this.matriz = matriz;
         if (view != null) {
             view.emCarregado();
         }

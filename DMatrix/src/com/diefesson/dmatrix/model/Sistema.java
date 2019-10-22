@@ -9,7 +9,7 @@ import java.util.Arrays;
  *
  * @author Diefesson de Sousa Silva
  */
-@Deprecated(forRemoval = true)//Se eu não marcar eu não lembro
+@Deprecated()//Se eu não marcar eu não lembro
 public class Sistema {
 
     private final Matriz dependentes, independentes;

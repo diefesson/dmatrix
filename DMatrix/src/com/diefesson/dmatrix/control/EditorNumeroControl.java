@@ -10,11 +10,11 @@ import java.util.Random;
 public class EditorNumeroControl {
 
     private final EditorNumeroView view;
-    private final DMatrixController dmController;
+    private final DMatrixControl dmController;
     private double numero = 0;
     private String nome = "";
 
-    public EditorNumeroControl(EditorNumeroView view, DMatrixController dmController) {
+    public EditorNumeroControl(EditorNumeroView view, DMatrixControl dmController) {
         this.view = view;
         this.dmController = dmController;
     }
@@ -101,11 +101,14 @@ public class EditorNumeroControl {
      *
      * @param min O valor mínimo inclusivo
      * @param max O valor máximo exclusivo
+     * @param arredontar Arredonta para menor o número gerado
      */
-    public void aleatorio(double min, double max) {
+    public void aleatorio(double min, double max, boolean arredontar) {
         double delta = max - min;
         Random r = new Random();
-        numero = min + delta * r.nextInt();
+        numero = min + delta * r.nextDouble();
+        if(arredontar)
+            numero = Math.floor(numero);
     }
 
 }
