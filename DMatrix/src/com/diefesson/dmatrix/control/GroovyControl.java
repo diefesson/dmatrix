@@ -8,7 +8,6 @@ import java.io.PipedReader;
 import java.io.PipedWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.function.Consumer;
 
 /**
  *
@@ -32,7 +31,7 @@ public class GroovyControl {
     public GroovyControl(DMatrixControl dmControl, GroovyView view) throws IOException {
         this.dmControl = dmControl;
         this.view = view;
-        
+
         variaveis = new Binding();
         shell = new GroovyShell(variaveis);
 
@@ -40,7 +39,7 @@ public class GroovyControl {
         saidaShell = new PipedWriter(saida);
         entrada = new PipedWriter();
         entradaShell = new PipedReader(entrada);
-        
+
         reiniciar();
     }
 
@@ -65,7 +64,11 @@ public class GroovyControl {
     public void executar(boolean async) {
         Thread thread = new Thread(() -> {
             executando = true;
-            shell.evaluate(script);
+            try {
+                shell.evaluate(script);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
             executando = false;
             if (view != null) {
                 view.aoTerminar();

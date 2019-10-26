@@ -4,9 +4,9 @@
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="barraDeMenu">
       <SubComponents>
-        <Menu class="javax.swing.JMenu" name="menuArquivo">
+        <Menu class="javax.swing.JMenu" name="menuDMatrix">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Arquivo"/>
+            <Property name="text" type="java.lang.String" value="DMatrix"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
@@ -18,6 +18,16 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Carregar"/>
               </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Sair"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -66,6 +76,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuSomarMatrizActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuSubtrairMatriz">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Subtrair"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuSubtrairMatrizActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuMultiplicarMatriz">
@@ -120,12 +138,61 @@
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="separadorMatriz3">
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="menuFatoracao">
+            <MenuItem class="javax.swing.JMenuItem" name="menuMatrizTrocar">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Fatora&#xe7;&#xe3;o PLU"/>
+                <Property name="text" type="java.lang.String" value="Trocar"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuFatoracaoActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuMatrizTrocarActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuMatrizCima">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Mover para cima"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuMatrizCimaActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuMatrizBaixo">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Mover para baixo"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuMatrizBaixoActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="menuHistorico">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Historico"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="menuVerHistorico">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Ver Historico"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuVerHistoricoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator5">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuHistoricoIniciar">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Iniciar/reiniciar"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuHistoricoIniciarActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuHistoricoRemover">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Remover"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuHistoricoRemoverActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -135,6 +202,16 @@
             <Property name="text" type="java.lang.String" value="Ampliada"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="menuExtrairAmpliada">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Extrair ampliada"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuExtrairAmpliadaActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator6">
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuCriarAmpliada">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Criar/editar"/>
@@ -176,7 +253,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuEditarNumero">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Editar escalar"/>
+                <Property name="text" type="java.lang.String" value="Editar selecionado"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuEditarNumeroActionPerformed"/>
@@ -184,10 +261,34 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuRemoverNumeros">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Remover escalar"/>
+                <Property name="text" type="java.lang.String" value="Remover selecionados"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuRemoverNumerosActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuEscalarTrocar">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Trocar"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuEscalarTrocarActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuEscalarCima">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Mover para cima"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuEscalarCimaActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuEscalarBaixo">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Mover para baixo"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuEscalarBaixoActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -196,6 +297,54 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Sistemas"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="menuGauss">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Aplicar Gauss"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuGaussActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuGaussJordan">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Aplicar Gauss-Jordan"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuGaussJordanActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator2">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuClassificarSistema">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Classificar sistema"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuClassificarSistemaActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuResolverSistema">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Resolver sistema"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuResolverSistemaActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuFatoracao">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Fatora&#xe7;&#xe3;o PLU"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuFatoracaoActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="menuOperacoes">
           <Properties>
@@ -224,14 +373,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Ajuda"/>
           </Properties>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="menuSair">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Sair"/>
-          </Properties>
-          <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="menuSairMouseClicked"/>
-          </Events>
         </Menu>
       </SubComponents>
     </Menu>
@@ -266,7 +407,7 @@
           <Group type="102" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="rolamentoMatrizes" pref="607" max="32767" attributes="0"/>
+                  <Component id="rolamentoMatrizes" pref="635" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="textoMatrizes" min="-2" max="-2" attributes="0"/>
@@ -319,6 +460,9 @@
               <Connection code="new DefaultListModel&lt;String&gt;()&#xa;" type="code"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listaMatrizesMouseClicked"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -340,6 +484,7 @@
                 <Column editable="false" title="Valor" type="java.lang.Double"/>
               </Table>
             </Property>
+            <Property name="autoResizeMode" type="int" value="4"/>
           </Properties>
         </Component>
       </SubComponents>

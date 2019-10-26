@@ -1,8 +1,8 @@
 package com.diefesson.dmatrix;
 
 import com.diefesson.dmatrix.model.Matriz;
+import com.diefesson.dmatrix.model.Registro;
 import com.diefesson.dmatrix.view.DMatrixView;
-import javax.swing.UIManager;
 
 /**
  *
@@ -11,7 +11,31 @@ import javax.swing.UIManager;
 public class DMatrix {
 
     public static void main(String[] args) throws InterruptedException {
-        
+        iniciar();
+    }
+
+    private static void testar() {
+        Matriz m = new Matriz(new double[][]{
+            {1, 2, 1},
+            {0, 0, 1},
+            {0, 0, 0}
+        });
+
+        m.definirAmpliada(new Matriz(new double[][]{
+            {1},
+            {1},
+            {0}
+        }));
+
+        m.iniciarHistorico();
+        m.gauss(false, false);
+        System.out.println(m);
+        System.out.println(m.obterAmpliada());
+        System.out.println(m.classificarSistema());
+        System.out.println(m.solucionarSistema());
+    }
+
+    private static void iniciar() {
         definirLaf();
         new DMatrixView().setVisible(true);
     }

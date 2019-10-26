@@ -4,7 +4,7 @@ import com.diefesson.dmatrix.view.EditorNumeroView;
 import java.util.Random;
 
 /**
- *
+ * Essa classe não faz quase nada... vou remove-la depois
  * @author Diefesson de Sousa Silva
  */
 public class EditorNumeroControl {

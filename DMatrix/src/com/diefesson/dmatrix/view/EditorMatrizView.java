@@ -26,18 +26,18 @@ public class EditorMatrizView extends javax.swing.JFrame {
         textoColunas = new javax.swing.JLabel();
         spinnerColunas = new javax.swing.JSpinner();
         spinnerLinhas = new javax.swing.JSpinner();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tabelaValores = new javax.swing.JTable();
         textoNome = new javax.swing.JLabel();
         campoNome = new javax.swing.JTextField();
         botaoSalvar = new javax.swing.JButton();
         botaoRedimensionar = new javax.swing.JButton();
+        panelMatriz = new com.diefesson.dmatrix.view.PanelMatriz();
         menuBar = new javax.swing.JMenuBar();
         menuCriar = new javax.swing.JMenu();
         menuCriarIdentidade = new javax.swing.JMenuItem();
         menuCriarAleatoria = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("DMatrix - Matriz");
 
         textoLinhas.setText("Linhas:");
 
@@ -46,20 +46,6 @@ public class EditorMatrizView extends javax.swing.JFrame {
         spinnerColunas.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
 
         spinnerLinhas.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
-
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-        tabelaValores.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        tabelaValores.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jScrollPane1.setViewportView(tabelaValores);
 
         textoNome.setText("Nome");
 
@@ -105,9 +91,9 @@ public class EditorMatrizView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelMatriz, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textoColunas)
                             .addComponent(textoLinhas, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -148,7 +134,7 @@ public class EditorMatrizView extends javax.swing.JFrame {
                                 .addComponent(campoNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(botaoRedimensionar, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+                .addComponent(panelMatriz, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -157,20 +143,20 @@ public class EditorMatrizView extends javax.swing.JFrame {
 
     private void botaoRedimensionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRedimensionarActionPerformed
         atualizarControl();//manda os dados da tabela para a matriz
-        controller.redimensionar((int) spinnerLinhas.getValue(), (int) spinnerColunas.getValue());//redimensiona a matriz
+        control.redimensionar((int) spinnerLinhas.getValue(), (int) spinnerColunas.getValue());//redimensiona a matriz
         atualizarView();//e então recebe os da matriz para a tabelas
     }//GEN-LAST:event_botaoRedimensionarActionPerformed
 
     private void botaoSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoSalvarActionPerformed
         atualizarControl();
-        controller.definirNome(campoNome.getText());
-        controller.salvar();
+        control.definirNome(campoNome.getText());
+        control.salvar();
         dispose();
     }//GEN-LAST:event_botaoSalvarActionPerformed
 
     private void menuCriarIdentidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCriarIdentidadeActionPerformed
         int ordem = (int) spinnerLinhas.getValue();
-        controller.definirMatriz(Matriz.gerarIdentidade(ordem));
+        Matriz.preencherIdentidade(control.obterMatriz());
         atualizarView();
     }//GEN-LAST:event_menuCriarIdentidadeActionPerformed
 
@@ -178,9 +164,9 @@ public class EditorMatrizView extends javax.swing.JFrame {
         int m = (int) spinnerLinhas.getValue();
         int n = (int) spinnerColunas.getValue();
 
-        Matriz matriz = new Matriz(m, n);
+        Matriz matriz = control.obterMatriz();
+        matriz.redimensionar(m, n);
         Matriz.PreencherAleatorio(matriz, -10, 11, true);
-        controller.definirMatriz(matriz);
 
         atualizarView();
     }//GEN-LAST:event_menuCriarAleatoriaActionPerformed
@@ -225,30 +211,25 @@ public class EditorMatrizView extends javax.swing.JFrame {
     private javax.swing.JButton botaoRedimensionar;
     private javax.swing.JButton botaoSalvar;
     private javax.swing.JTextField campoNome;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuCriar;
     private javax.swing.JMenuItem menuCriarAleatoria;
     private javax.swing.JMenuItem menuCriarIdentidade;
+    private com.diefesson.dmatrix.view.PanelMatriz panelMatriz;
     private javax.swing.JSpinner spinnerColunas;
     private javax.swing.JSpinner spinnerLinhas;
-    private javax.swing.JTable tabelaValores;
     private javax.swing.JLabel textoColunas;
     private javax.swing.JLabel textoLinhas;
     private javax.swing.JLabel textoNome;
     // End of variables declaration//GEN-END:variables
 
-    private final EditorMatrizControl controller;
-    private final DefaultTableModel modeloValores;
-    
-    
+    private final EditorMatrizControl control;
+
     public EditorMatrizView(DMatrixControl dmController, boolean renomeavel) {
         initComponents();
 
-        controller = new EditorMatrizControl(dmController, this);
-        modeloValores = new TabelaNumeros();
-        tabelaValores.setModel(modeloValores);
-        
+        control = new EditorMatrizControl(dmController, this);
+
         campoNome.setEnabled(renomeavel);
 
         atualizarView();
@@ -259,7 +240,7 @@ public class EditorMatrizView extends javax.swing.JFrame {
      */
     public void emCarregado() {
         SwingUtilities.invokeLater(() -> {
-            campoNome.setText(controller.obterNome());
+            campoNome.setText(control.obterNome());
             atualizarView();
         });
     }
@@ -269,21 +250,15 @@ public class EditorMatrizView extends javax.swing.JFrame {
      */
     private void atualizarView() {
         SwingUtilities.invokeLater(() -> {
-            Matriz matriz = controller.obterMatriz();
+            Matriz matriz = control.obterMatriz();
+            
             int m = matriz.obterAltura();
             int n = matriz.obterLargura();
 
             spinnerLinhas.setValue(m);
             spinnerColunas.setValue(n);
 
-            modeloValores.setRowCount(m);
-            modeloValores.setColumnCount(n);
-
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < n; j++) {
-                    modeloValores.setValueAt(matriz.obterValor(i, j), i, j);
-                }
-            }
+            panelMatriz.atualizarView(matriz);
         });
     }
 
@@ -292,25 +267,13 @@ public class EditorMatrizView extends javax.swing.JFrame {
      *
      */
     private void atualizarControl() {
-        int m = modeloValores.getRowCount();
-        int n = modeloValores.getColumnCount();
-        Matriz matriz = controller.obterMatriz();
+        Matriz matriz = control.obterMatriz();
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                double valor = 0;
-                try {
-                    valor = Double.parseDouble(modeloValores.getValueAt(i, j).toString());
-                } catch (NumberFormatException ex) {
-
-                }
-                matriz.definirValor(valor, i, j);
-            }
-        }
+        panelMatriz.atualizarControl(matriz);
     }
 
     public EditorMatrizControl obterController() {
-        return controller;
+        return control;
     }
 
 }

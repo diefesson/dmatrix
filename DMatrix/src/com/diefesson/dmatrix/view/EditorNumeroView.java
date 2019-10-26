@@ -26,6 +26,7 @@ public class EditorNumeroView extends javax.swing.JFrame {
         spinnerEscalar = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("DMatrix - Escalar");
 
         textoValor.setText("Valor:");
 

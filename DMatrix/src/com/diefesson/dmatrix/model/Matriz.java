@@ -10,6 +10,7 @@ public class Matriz {
 
     private double[][] valores;
     private Matriz ampliada;
+    private Historico historico;
 
     /**
      *
@@ -38,17 +39,29 @@ public class Matriz {
     }
 
     /**
-     * Cria uma cópia de uma matriz já existente
+     * Cria uma cópia de uma matriz já existente, não copia a matriz ampliada
      *
      * @param original A matriz original que será copiada
      */
     public Matriz(Matriz original) {
+        this(original, false);
+    }
+
+    public Matriz(Matriz original, boolean ampl) {
         valores = new double[original.obterAltura()][original.obterLargura()];
 
         for (int i = 0; i < valores.length; i++) {
             for (int j = 0; j < valores[0].length; j++) {
                 valores[i][j] = original.valores[i][j];
             }
+        }
+
+        if (ampl && original.ampliada != null) {
+            ampliada = new Matriz(original.ampliada);
+        }
+
+        if (original.obterHistorico() != null) {
+            iniciarHistorico();
         }
     }
 
@@ -77,6 +90,18 @@ public class Matriz {
 
     public Matriz obterAmpliada() {
         return ampliada;
+    }
+
+    public Historico obterHistorico() {
+        return historico;
+    }
+
+    public void removerHistorico() {
+        historico = null;
+    }
+
+    public void iniciarHistorico() {
+        historico = new Historico(this);
     }
 
     public void definirValor(double valor, int i, int j) {
@@ -235,8 +260,9 @@ public class Matriz {
                 valores[i][j] += escalar;
             }
         }
-        if (ampliada != null) {
-            ampliada.soma(escalar);
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("soma com escalar: " + escalar);
         }
     }
 
@@ -258,9 +284,27 @@ public class Matriz {
                 valores[i][j] += outra.obterValor(i, j);
             }
         }
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("soma com matriz");
+        }
+    }
 
-        if (ampliada != null && ampliada.obterAltura() == m && ampliada.obterLargura() == n) {
-            ampliada.soma(outra);
+    public void subtrair(Matriz outra) {
+        int m = obterAltura();
+        int n = obterLargura();
+        if (m != outra.obterAltura() || n != outra.obterLargura()) {
+            throw new IllegalArgumentException("O tamanho das matrizes deve ser igual(" + m + "x" + n + " " + outra.obterAltura() + "x" + outra.obterLargura() + ")");
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                valores[i][j] -= outra.obterValor(i, j);
+            }
+        }
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("soma com matriz");
         }
     }
 
@@ -279,6 +323,10 @@ public class Matriz {
 
         if (ampliada != null) {
             ampliada.multiplicar(escalar);
+        }
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("multiplicação com escalar: " + escalar);
         }
     }
 
@@ -303,6 +351,11 @@ public class Matriz {
                 }
                 saida.definirValor(valor, i, j);
             }
+        }
+
+        if (historico != null) {
+            saida.iniciarHistorico();
+            saida.obterHistorico().adcionarDescricao("multiplicação com matriz");
         }
 
         return saida;
@@ -333,8 +386,8 @@ public class Matriz {
     }
 
     /**
-     * obtém a linha processado i e j da sequinte forma i = i % m j = j % n útil
-     * para o teorema de Sarrus
+     * obtém a linha processado i e j da sequinte forma i = i % m, j = j % n
+     * útil para o teorema de Sarrus
      *
      * @param i a linha do valor
      * @param j a coluna do fator
@@ -358,6 +411,7 @@ public class Matriz {
                 m.definirValor(obterMenorComplemento(i, j), i, j);
             }
         }
+
         return m;
     }
 
@@ -474,6 +528,11 @@ public class Matriz {
                 valores[i][j] = original[i][j];
             }
         }
+
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("redimensionado para " + m + "x" + n);
+        }
     }
 
     /**
@@ -492,21 +551,36 @@ public class Matriz {
                 matriz.definirValor(obterValor(i, j), j, i);
             }
         }
+
+        if (historico != null) {
+            matriz.iniciarHistorico();
+            matriz.obterHistorico().adcionarDescricao("transposta");
+        }
         return matriz;
     }
 
     public Matriz obterAdjunta() {
-        return obterMatrizCofator().obterTransposta();
+        Matriz matriz = obterMatrizCofator().obterTransposta();
+        if (historico != null) {
+            matriz.iniciarHistorico();
+            matriz.obterHistorico().adcionarDescricao("adjunta");
+        }
+        return matriz;
     }
 
     public Matriz obterInversa() {
         double determinante = obterDeterminante();
-        if(determinante == 0){
+        if (determinante == 0) {
             return null;
         }
 
         Matriz inversa = obterAdjunta();
         inversa.multiplicar(1 / determinante);
+
+        if (historico != null) {
+            inversa.iniciarHistorico();
+            inversa.obterHistorico().adcionarDescricao("inversa");
+        }
 
         return inversa;
     }
@@ -555,6 +629,10 @@ public class Matriz {
                     valores[i][j] = arredontado;
                 }
             }
+        }
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("arredontado com delta: " + delta);
         }
     }
 
@@ -607,6 +685,11 @@ public class Matriz {
         if (ampliada != null) {
             ampliada.trocarColuna(a, b);
         }
+
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("troca de coluna: " + a + " <-> " + b);
+        }
     }
 
     public void trocarLinha(int a, int b) {
@@ -621,6 +704,11 @@ public class Matriz {
 
         if (ampliada != null) {
             ampliada.trocarLinha(a, b);
+        }
+
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("troca de linha: " + a + " <-> " + b);
         }
     }
 
@@ -639,6 +727,11 @@ public class Matriz {
         if (ampliada != null) {
             ampliada.somarLinha(a, b, multiplicador);
         }
+
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("soma de linhas: L" + b + " += " + multiplicador + "L" + a);
+        }
     }
 
     /**
@@ -651,6 +744,11 @@ public class Matriz {
     public void somarColuna(int a, int b, double multiplicador) {
         for (int i = 0; i < valores.length; i++) {
             valores[i][b] += multiplicador * valores[i][a];
+        }
+
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("soma de colunas: C" + a + " += " + multiplicador + "C" + b);
         }
     }
 
@@ -676,6 +774,12 @@ public class Matriz {
         for (int i = 1; i < exp; i++) {
             m = m.multiplicar(this);
         }
+
+        if (historico != null) {
+            m.iniciarHistorico();
+            m.obterHistorico().adcionarDescricao("potencia: " + exp);
+        }
+
         return m;
     }
 
@@ -711,9 +815,12 @@ public class Matriz {
         return j;
     }
 
-    public Matriz[] gauss() {
+    public Matriz[] gauss(boolean jordan, boolean lu) {
         int m = obterAltura();
         int n = obterLargura();
+
+        DirecaoEliminacao direcao = (jordan) ? DirecaoEliminacao.AMBAS : DirecaoEliminacao.BAIXO;
+
         if (ampliada != null) {
             if (ampliada.obterLargura() != 1) {
                 throw new IllegalStateException("a largura da matriz ampliada deve ser igual a 1");
@@ -722,21 +829,187 @@ public class Matriz {
             }
         }
 
-        int maior = Math.max(m, n);
-        Matriz p = Matriz.gerarIdentidade(maior);
-        Matriz l = Matriz.gerarIdentidade(maior);
+        Matriz p = null;
+        Matriz l = null;
+
+        if (lu) {
+            p = Matriz.gerarIdentidade(m);
+            l = Matriz.gerarIdentidade(m, n);
+        }
+
+        if (historico != null) {
+            if (lu) {
+                p.iniciarHistorico();
+                p.obterHistorico().adcionarDescricao("matriz P");
+                l.iniciarHistorico();
+                l.obterHistorico().adcionarDescricao("matriz L");
+            }
+            historico.adcionarDescricao("inicio do método de Gauss");
+        }
 
         for (int i = 0, j = 0; i < m && j < n; j++) {
             int pivo = linhaPivo(j);//A linha do pivô
             if (pivo != -1) {
                 trocarLinha(i, pivo);//Traz esses valores até a linha correta
-                p.trocarLinha(i, pivo);
-                eliminacaoGaussiana(i, j, DirecaoEliminacao.BAIXO, l);
+                if (lu) {
+                    p.trocarLinha(i, pivo);
+                }
+                if (jordan) {
+                    multiplicarLinha(i, 1 / valores[i][j]);//divide a linha pelo valor do pivo
+                }
+                eliminacaoGaussiana(i, j, direcao, l);
                 i++;//avança para a próxima linha
             }
         }
 
+        if (historico != null) {
+            historico.adcionarDescricao("fim do método de Gauss");
+        }
+
         return new Matriz[]{l, p};
+    }
+
+    /**
+     * Este método assume que o processo de Gauss ou Gauss-Jordan já tenha sido
+     * aplicado
+     *
+     * @return
+     */
+    public TipoSistema classificarSistema() {
+        int m = obterAltura();
+        if (ampliada == null) {
+            throw new IllegalStateException("a ampliada deve existir");
+        } else if (ampliada.obterAltura() != m || ampliada.obterLargura() != 1) {
+            throw new IllegalStateException("o tamanho da ampliada é inválido");
+        }
+
+        for (int i = 0; i < m; i++) {
+            if (classificarEquacao(i) == TipoEquacao.DEGENERADA) {
+                System.out.println("linha " + i);
+                return TipoSistema.IMPOSSIVEL;
+            }
+        }
+
+        int posto = linhasNaoNulas();
+        int incognitas = obterIncognitas();
+
+        if (posto < incognitas) {
+            System.out.println("posto " + posto + " incognitas " + incognitas);
+            return TipoSistema.POSSIVEL_INDERMINADO;
+        }
+
+        return TipoSistema.POSSIVEL_DETERMINADO;
+    }
+
+    public int obterIncognitas() {
+        int incognitas = 0;
+        for (int j = 0, n = obterLargura(); j < n; j++) {
+            for (int i = 0, m = obterAltura(); i < m; i++) {
+                if (valores[i][j] != 0) {
+                    incognitas++;
+                    break;
+                }
+            }
+        }
+        return incognitas;
+    }
+
+    /**
+     * Esse método assume que o processo de Gauss ou Gauss-Jordan já foi
+     * aplicado e que o sistema tenha solucão determinada
+     *
+     * @return A matriz solução
+     */
+    public Matriz solucionarSistema() {
+        int m = obterAltura();
+
+        Matriz solucao = new Matriz(m, 1);
+
+        for (int i = m - 1; i >= 0; i--) {
+            if (classificarEquacao(i) != TipoEquacao.NULA) {//Salta equações nulas
+                solucionarEquacao(i, solucao);
+            }
+        }
+
+        return solucao;
+    }
+
+    /**
+     * Este método assume que o sistema tenha solução
+     *
+     * @param i A linha da equação a ser solucionada
+     * @param solucao A matriz contento os valores anteriores já solucionados, o
+     * resultado será colocado nessa matriz
+     */
+    private void solucionarEquacao(int i, Matriz solucao) {
+        int pivo = zerosInicioLinha(i);//A coluna do termo a ser solucionado
+        int n = obterLargura();
+
+        //Os valores do termo dependente e do termo indenpendente
+        double dependente = valores[i][pivo];
+        double independente = ampliada.valores[i][0];
+
+        for (int j = pivo + 1; j < n; j++) {
+            independente -= valores[i][j] * solucao.valores[j][0];//soma, acho que está errado...
+        }
+
+        double s = independente / dependente;
+        solucao.valores[pivo][0] = s;
+    }
+
+    /**
+     * Retorna o tipo de equação de uma determinada linha Esse método assume que
+     * a ampliada existe e seu tamanho seja válido
+     *
+     * @param i A linha da equação
+     * @return O tipo da equação
+     */
+    public TipoEquacao classificarEquacao(int i) {
+        for (int j = 0, n = obterLargura(); j < n; j++) {
+            if (valores[i][j] != 0) {
+                return TipoEquacao.NORMAL;
+            }
+        }
+        //Se chegou até aqui então todos os termos dependentes são zero
+        if (ampliada.valores[i][0] == 0) {
+            return TipoEquacao.NULA;
+        } else {
+            return TipoEquacao.DEGENERADA;
+        }
+    }
+
+    public void multiplicarLinha(int i, double multiplicador) {
+        int n = obterLargura();
+
+        for (int j = 0; j < n; j++) {
+            valores[i][j] *= multiplicador;
+        }
+
+        if (ampliada != null) {
+            ampliada.multiplicarLinha(i, multiplicador);
+        }
+
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("multiplicar linha: L" + i + " *= " + multiplicador);
+        }
+    }
+
+    public void multiplicarColuna(int j, double multiplicador) {
+        int m = obterAltura();
+
+        for (int i = 0; i < m; i++) {
+            valores[i][j] *= multiplicador;
+        }
+
+        if (ampliada != null) {
+            ampliada.multiplicarColuna(j, multiplicador);
+        }
+
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("multiplicar coluna: C" + j + " *= " + multiplicador);
+        }
     }
 
     public void eliminacaoGaussiana(int i, int j, DirecaoEliminacao direcao, Matriz l) {
@@ -752,8 +1025,13 @@ public class Matriz {
             for (int k = i + 1; k < m; k++) {
                 double razao = valores[k][j] / valores[i][j];
                 somarLinha(i, k, -razao);
+                valores[k][j] = 0;//Garante que o valor seja zerado
                 if (l != null) {
                     l.valores[k][j] = razao;
+                    l.obterHistorico().registrar(l);
+                    if (l.obterHistorico() != null) {
+                        l.obterHistorico().registrar(l);
+                    }
                 }
             }
         }
@@ -762,8 +1040,12 @@ public class Matriz {
             for (int k = 0; k < i; k++) {
                 double razao = valores[k][j] / valores[i][j];
                 somarLinha(i, k, -razao);
+                valores[k][j] = 0;
                 if (l != null) {
                     l.valores[k][j] = razao;
+                    if (l.obterHistorico() != null) {
+                        l.obterHistorico().registrar(l);
+                    }
                 }
             }
         }
@@ -802,11 +1084,36 @@ public class Matriz {
      * @return uma nova matriz identidade
      */
     public static Matriz gerarIdentidade(int ordem) {
-        Matriz identidade = new Matriz(ordem, ordem);
-        for (int k = 0; k < ordem; k++) {
-            identidade.definirValor(1, k, k);
+        return gerarIdentidade(ordem, ordem);
+    }
+
+    /**
+     *
+     * @param m a altura da nova matriz
+     * @param n a largura da nova matriz
+     * @return A identidade redimensionada de acordo com m e n
+     */
+    public static Matriz gerarIdentidade(int m, int n) {
+        Matriz identidade = new Matriz(m, n);
+        for (int k = 0, l = Math.min(m, n); k < l; k++) {
+            identidade.valores[k][k] = 1;
         }
         return identidade;
+    }
+
+    public static void preencherIdentidade(Matriz matriz) {
+        int m = matriz.obterAltura();
+        int n = matriz.obterLargura();
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                matriz.valores[i][j] = 0;
+            }
+        }
+
+        for (int k = 0, l = Math.min(m, n); k < l; k++) {//Usa um loop extra mas evita m*n verificações de i == j
+            matriz.valores[k][k] = 1;
+        }
     }
 
     /**
@@ -841,8 +1148,9 @@ public class Matriz {
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 double v = r.nextDouble() * delta + min;
-                if(arredontar)
+                if (arredontar) {
                     v = Math.floor(v);
+                }
                 matriz.definirValor(v, i, j);
             }
         }

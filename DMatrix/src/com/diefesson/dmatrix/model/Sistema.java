@@ -5,11 +5,11 @@ import java.util.Arrays;
 /**
  * Classe desnecessária, já começei a adcionar novos métodos na classe Matriz
  * dessa forma é mais flexivel de trabalhar com Gauss, fatoração LU e eliminação
- * por linhas
+ * por linhas, Só vou deixar aqui de lembrança...
  *
  * @author Diefesson de Sousa Silva
  */
-@Deprecated()//Se eu não marcar eu não lembro
+@Deprecated()
 public class Sistema {
 
     private final Matriz dependentes, independentes;
