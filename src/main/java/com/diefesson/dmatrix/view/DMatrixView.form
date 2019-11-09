@@ -358,6 +358,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuDeterminanteActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="menuPosto">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Posto"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuPostoActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu1">
@@ -385,17 +393,15 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuClassificarSistema">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Classificar sistema"/>
+                <Property name="text" type="java.lang.String" value="Classificar sistema Escalonado"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuClassificarSistemaActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuResolverSistema">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Resolver sistema"/>
+                <Property name="text" type="java.lang.String" value="Resolver sistema Escalonado"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuResolverSistemaActionPerformed"/>

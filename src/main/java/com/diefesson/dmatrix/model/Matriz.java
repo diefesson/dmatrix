@@ -1001,7 +1001,7 @@ public class Matriz {
             throw new IllegalStateException("o tamanho da ampliada é inválido");
         }
 
-        for (int i = 0; i < m; i++) { //prefiri essa forma por ser mais precisa
+        for (int i = 0; i < m; i++) { //preferi essa forma por ser mais precisa
             if (classificarEquacao(i) == TipoEquacao.DEGENERADA) {
                 return TipoSistema.IMPOSSIVEL;
             }
@@ -1460,7 +1460,8 @@ public class Matriz {
     }
 
     public void normalizar() {
-        for (int i = 0, m = obterAltura(); i < m; i++) {
+        int m = obterAltura();
+        for (int i = 0; i < m; i++) {
             normalizarVetor(i);
         }
     }

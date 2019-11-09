@@ -83,12 +83,12 @@ public class DMatrixView extends javax.swing.JFrame {
         menuPotencia = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         menuDeterminante = new javax.swing.JMenuItem();
+        menuPosto = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         menuGauss = new javax.swing.JMenuItem();
         menuGaussJordan = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         menuClassificarSistema = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         menuResolverSistema = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         menuFatoracao = new javax.swing.JMenuItem();
@@ -474,6 +474,14 @@ public class DMatrixView extends javax.swing.JFrame {
         });
         menuOperacoes.add(menuDeterminante);
 
+        menuPosto.setText("Posto");
+        menuPosto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPostoActionPerformed(evt);
+            }
+        });
+        menuOperacoes.add(menuPosto);
+
         barraDeMenu.add(menuOperacoes);
 
         jMenu1.setText("Sistemas");
@@ -495,16 +503,15 @@ public class DMatrixView extends javax.swing.JFrame {
         jMenu1.add(menuGaussJordan);
         jMenu1.add(jSeparator2);
 
-        menuClassificarSistema.setText("Classificar sistema");
+        menuClassificarSistema.setText("Classificar sistema Escalonado");
         menuClassificarSistema.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuClassificarSistemaActionPerformed(evt);
             }
         });
         jMenu1.add(menuClassificarSistema);
-        jMenu1.add(jSeparator3);
 
-        menuResolverSistema.setText("Resolver sistema");
+        menuResolverSistema.setText("Resolver sistema Escalonado");
         menuResolverSistema.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuResolverSistemaActionPerformed(evt);
@@ -1378,6 +1385,25 @@ public class DMatrixView extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, mensagem);
     }//GEN-LAST:event_menuArredontarActionPerformed
 
+    private void menuPostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPostoActionPerformed
+        int indice = listaMatrizes.getSelectedIndex();
+        if(indice == -1){
+            return;
+        }
+        
+        String nome = modeloMatrizes.get(indice);
+        Matriz matriz = control.obterMatriz(nome);
+        
+        Matriz g = new Matriz(matriz, true, false);
+        g.gauss(false, false);
+        
+        control.adcionarNumero("posto de " + nome, g.linhasNaoNulas());
+        Matriz a = g.obterAmpliada();
+        if(a != null){
+            control.adcionarNumero("posto da ampliada de " + nome, a.linhasNaoNulas());
+        }
+    }//GEN-LAST:event_menuPostoActionPerformed
+
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -1407,7 +1433,6 @@ public class DMatrixView extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
@@ -1455,6 +1480,7 @@ public class DMatrixView extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuNovoNumero;
     private javax.swing.JMenu menuNumeros;
     private javax.swing.JMenu menuOperacoes;
+    private javax.swing.JMenuItem menuPosto;
     private javax.swing.JMenuItem menuPotencia;
     private javax.swing.JMenuItem menuRemover;
     private javax.swing.JMenuItem menuRemoverMatrizes;

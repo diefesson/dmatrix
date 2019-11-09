@@ -21,6 +21,7 @@ public class PanelMatriz extends javax.swing.JPanel {
         tabelaValores.setModel(modeloValores);
         tabelaValores.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tabelaValores.setAutoscrolls(false);
+        tabelaValores.setTableHeader(null);
         scrollValores.setViewportView(tabelaValores);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
