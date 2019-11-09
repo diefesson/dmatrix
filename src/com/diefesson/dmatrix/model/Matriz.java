@@ -368,11 +368,11 @@ public class Matriz {
 
         int m = saida.obterAltura();
         int n = saida.obterLargura();
-        int o = obterLargura();
+        int o = obterLargura();//as dimensões iguais
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 double valor = 0;
-                for (int k = 0; k < o; k++) {
+                for (int k = 0; k < o; k++) {//loop da soma
                     valor += obterValor(i, k) * outra.obterValor(k, j);
                 }
                 saida.definirValor(valor, i, j);
@@ -454,7 +454,7 @@ public class Matriz {
         Matriz m = new Matriz(ordem, ordem);
         for (int i = 0; i < ordem; i++) {
             for (int j = 0; j < ordem; j++) {
-                m.definirValor(obterCofator(i, j), i, j);
+                m.valores[i][j] = obterCofator(i, j);
             }
         }
         return m;
@@ -524,15 +524,44 @@ public class Matriz {
         }
 
         Matriz menor = new Matriz(ordem - 1, ordem - 1);
-        for (int k = 0, y = 0; k < ordem; k++) {
-            if (k != i) {
-                for (int l = 0, x = 0; l < ordem; l++) {
-                    if (l != j) {
-                        menor.definirValor(valores[k][l], x, y);
-                        x++;
-                    }
-                }
-                y++;
+//        for (int k = 0, y = 0; k < ordem; k++) {
+//            if (k != i) {
+//                for (int l = 0, x = 0; l < ordem; l++) {
+//                    if (l != j) {
+//                        menor.valores[x][y] = valores[k][l];
+//                        x++;
+//                    }
+//                }
+//                y++;
+//            }
+//        }
+
+        //tem menos if, é como cortar a matriz na linha i e coluna j e percorrer os 4 pedaços menores
+        //y e x são coordenadas para a menor
+        //k e l são as coordenadas da original
+        //canto superior
+        int y = 0;
+        for (int k = 0; k < i; k++, y++) {
+            int x = 0;
+            //esquerdo
+            for (int l = 0; l < j; l++, x++) {
+                menor.valores[y][x] = valores[k][l];
+            }
+            //direito
+            for (int l = j + 1; l < ordem; l++, x++) {
+                menor.valores[y][x] = valores[k][l];
+            }
+        }
+        //canto inferior
+        for (int k = i + 1; k < ordem; k++, y++) {
+            int x = 0;
+            //esquerdo
+            for (int l = 0; l < j; l++, x++) {
+                menor.valores[y][x] = valores[k][l];
+            }
+            //direito
+            for (int l = j + 1; l < ordem; l++, x++) {
+                menor.valores[y][x] = valores[k][l];
             }
         }
 
@@ -601,29 +630,38 @@ public class Matriz {
     }
 
     public Matriz obterAdjunta() {
-        Matriz matriz = obterMatrizCofator().obterTransposta();
-        if (historico != null) {
-            matriz.iniciarHistorico();
-            matriz.obterHistorico().adcionarDescricao("adjunta");
+        if (!verificarQuadrada()) {
+            throw new IllegalStateException("a matriz deve ser quadrada para que tenha uma matriz adjunta");
         }
-        return matriz;
+
+        int ordem = obterAltura();
+        Matriz m = new Matriz(ordem, ordem);
+        for (int i = 0; i < ordem; i++) {
+            for (int j = 0; j < ordem; j++) {
+                m.valores[j][i] = obterCofator(i, j);//note as coordenadas trocadas
+            }
+        }
+        return m;
     }
 
     public Matriz obterInversa() {
+        if (!verificarQuadrada()) {
+            throw new IllegalStateException("a matriz deve ser quadrada para que tenha uma matriz inversa");
+        }
+
         double determinante = obterDeterminante();
         if (determinante == 0) {
             return null;
         }
 
-        Matriz inversa = obterAdjunta();
-        inversa.multiplicar(1 / determinante);
-
-        if (historico != null) {
-            inversa.iniciarHistorico();
-            inversa.obterHistorico().adcionarDescricao("inversa");
+        int ordem = obterAltura();
+        Matriz m = new Matriz(ordem, ordem);
+        for (int i = 0; i < ordem; i++) {
+            for (int j = 0; j < ordem; j++) {
+                m.valores[j][i] = obterCofator(i, j) / determinante;//divide pelo determinante
+            }
         }
-
-        return inversa;
+        return m;
     }
 
     /**
@@ -664,7 +702,7 @@ public class Matriz {
      */
     public boolean arredontarImprecisao(double delta) {
         boolean alterado = false;
-        
+
         for (int i = 0; i < valores.length; i++) {
             for (int j = 0; j < valores[i].length; j++) {
                 double arredontado = Math.round(valores[i][j]);
@@ -674,12 +712,12 @@ public class Matriz {
                 }
             }
         }
-        
+
         if (alterado) {
             registrar(this);
             adcionarDescricao("arredontado com delta: " + delta);
         }
-        
+
         return alterado;
     }
 
@@ -845,10 +883,6 @@ public class Matriz {
             m = m.multiplicar(this);
         }
 
-        if (ampliada != null) {//Bem melhor do que deixar o loop fazer várias cópias da matriz ampliada que não será alterada
-            m.ampliada = new Matriz(ampliada);
-        }
-
         if (historico != null) {
             m.iniciarHistorico();
             m.obterHistorico().adcionarDescricao("potencia: " + exp);
@@ -967,25 +1001,23 @@ public class Matriz {
             throw new IllegalStateException("o tamanho da ampliada é inválido");
         }
 
-        for (int i = 0; i < m; i++) {
+        for (int i = 0; i < m; i++) { //prefiri essa forma por ser mais precisa
             if (classificarEquacao(i) == TipoEquacao.DEGENERADA) {
-                System.out.println("linha " + i);
                 return TipoSistema.IMPOSSIVEL;
             }
         }
 
         int posto = linhasNaoNulas();
-        int incognitas = obterIncognitas();
+        int incognitas = obterLargura();
 
         if (posto < incognitas) {
-            System.out.println("posto " + posto + " incognitas " + incognitas);
             return TipoSistema.POSSIVEL_INDERMINADO;
         }
 
         return TipoSistema.POSSIVEL_DETERMINADO;
     }
 
-    public int obterIncognitas() {
+    public int quantidadeIncognitas() {
         int incognitas = 0;
         for (int j = 0, n = obterLargura(); j < n; j++) {
             for (int i = 0, m = obterAltura(); i < m; i++) {
@@ -1010,9 +1042,10 @@ public class Matriz {
         Matriz solucao = new Matriz(m, 1);
 
         for (int i = m - 1; i >= 0; i--) {
-            if (classificarEquacao(i) != TipoEquacao.NULA) {//Salta equações nulas
-                solucionarEquacao(i, solucao);
+            if (classificarEquacao(i) == TipoEquacao.NULA) {
+                break;
             }
+            solucionarEquacao(i, solucao);
         }
 
         return solucao;
@@ -1152,10 +1185,10 @@ public class Matriz {
      * @return O produto interno usual
      */
     public double produtoInterno(int a, int b) {
-        return ProdutoInterno(a, b, this);
+        return produtoInterno(a, b, this);
     }
-    
-    public double modulo(int i){
+
+    public double modulo(int i) {
         return Math.sqrt(produtoInterno(i, i));
     }
 
@@ -1167,16 +1200,16 @@ public class Matriz {
      * @param outra A outra matriz
      * @return O produto interno usual
      */
-    public double ProdutoInterno(int a, int b, Matriz outra) {
+    public double produtoInterno(int a, int b, Matriz outra) {
         int n = obterLargura();
         if (n != outra.obterLargura()) {
             throw new IllegalArgumentException("as matrizes devem ter a mesma largura");
         }
-        double pi = 0;
+        double p = 0;
         for (int j = 0; j < n; j++) {
-            pi += valores[a][j] * outra.valores[b][j];
+            p += valores[a][j] * outra.valores[b][j];
         }
-        return pi;
+        return p;
     }
 
     public TipoBase classificarBase() {
@@ -1219,10 +1252,26 @@ public class Matriz {
 
     /**
      * Retira as colunas e filas nulas e redimensiona a matriz
+     * @param linhas se as linas devem ser oranizadas
+     * @param colunas se as colunas devem ser organizadas
+     * @param redimensionar se ao final da organizacao deve redimensionar ao tamanho sem filas nulas
      */
     public void organizar(boolean linhas, boolean colunas, boolean redimensionar) {
         if (!(linhas || colunas)) {
             return;
+        }
+        
+        if(historico != null){
+            historico.adcionarDescricao("Inicio da reorganização da matriz");
+            if(linhas){
+                historico.adcionarDescricao("por linhas");
+            }
+            if(colunas){
+                historico.adcionarDescricao("por colunas");
+            }
+            if(redimensionar){
+                historico.adcionarDescricao("com redimensionamento");
+            }
         }
 
         int m = obterAltura();
@@ -1236,8 +1285,8 @@ public class Matriz {
                 if (verificarLinhaNula(i)) {
                     mm--;//Atualiza o limite
                     int ii = obterProximaLinhaNaoNula(i);
-                    if (ii != -1) {
-                        mm = i;
+                    if (ii == -1) {
+                        mm = i;//Não tem mais linhas não nulas, logo esta foi a ultima
                         break;
                     }
                     trocarLinha(i, ii);
@@ -1250,7 +1299,7 @@ public class Matriz {
                 if (verificarColunaNula(j)) {
                     nn--;
                     int jj = obterProximaColunaNaoNula(j);
-                    if (jj == -1) {//Chegou cedo ao tamanho máximo
+                    if (jj == -1) {
                         nn = j;
                         break;
                     }
@@ -1259,15 +1308,17 @@ public class Matriz {
             }
         }
 
-        if (historico != null) {
-            historico.registrar(this);
-            historico.adcionarDescricao("Matriz reorganizada com remoção de filas nulas");
-        }
+
 
         if (redimensionar) {
             mm = Math.max(1, mm);//Caso ela seja toda nula, o tamanho mínimo é 1x1
             nn = Math.max(1, nn);
             redimensionar(mm, nn);
+        }
+
+        if (historico != null) {
+            historico.registrar(this);
+            historico.adcionarDescricao("Fim da reorganização da matriz");
         }
     }
 
@@ -1279,33 +1330,33 @@ public class Matriz {
             historico.adcionarDescricao("Inicio da preparação da base");
         }
 
-        redimensionar(n, n);
+        redimensionar(Math.max(obterAltura(),n), n);//garante a quantidade minima de linhas
 
         Matriz g = new Matriz(this, false, false);
-        g.gaussSemTroca();//Isto removerá todos os termos dependentes
+        g.gaussSemTroca();//base auxiliar para encontrar termos dependentes
 
         if (h) {
             historico.registrar(g);
             historico.adcionarDescricao("Base auxiliar escalonada por Gauss sem troca de linhas");
         }
 
-        //organizar(true, false, false);//Coloca todos os vetores no começo da matriz
-        int nn = g.linhasNaoNulas();
-
-        for (int i = 0; i < n; i++) {//Remover os termos dependentes
+        for (int i = 0; i < n; i++) {//remover os termos dependentes
             if (g.verificarLinhaNula(i)) {
-                nulificarLinha(i);
+                nulificarLinha(i); //remove o termo dependente correspondente
             }
         }
 
         for (int v = 0, d = 0; v < n; v++) {//Adciona vetores elementares para completar a base
-            if (!g.contemVetor(v)) {
+            if (!g.contemVetor(v)) {//verifica se g contém o vetor representante de certo eixo
                 d = obterProximaLinhaNula(d);//Começa a procurar após a última já encontrada
-                definirVetorElementar(d++, v);
+                definirVetorElementar(d++, v);//insere um vetor elementar v na linha d
             }
         }
+        
+        organizar(true, false, true);//organiza os vetores no começo da matriz e retira os vetores nulos
 
         if (h) {
+            historico.registrar(this);
             historico.adcionarDescricao("Fim da preparação da base");
         }
     }
@@ -1390,33 +1441,31 @@ public class Matriz {
     }
 
     private void ortogonalizarVetor(int vetor) {
-        double[] coeficientes = new double[vetor];
-        for (int i = 0; i < coeficientes.length; i++) {
-            coeficientes[i] = coeficienteVetorial(vetor, i);
-        }
-        for (int i = 0; i < coeficientes.length; i++) {
-            somarLinha(i, vetor, -coeficientes[i]);
+        for (int i = 0; i < vetor; i++) {
+            double coeficiente = coeficienteVetorial(vetor, i);//coeficiente da projeção vetorial
+            somarLinha(i, vetor, -coeficiente);
             adcionarDescricao("O multiplicador é o simétrico do Coeficiente de Fourier");
         }
     }
 
     /**
      * O coeficiente da projeção de a em b
+     *
      * @param a A linha do vetor a projetado
      * @param b O alvo da projeção
      * @return O coeficiente de Fourier
      */
     public double coeficienteVetorial(int a, int b) {
-        return produtoInterno(a, b) / produtoInterno(b, b);
+        return Matriz.this.produtoInterno(a, b) / Matriz.this.produtoInterno(b, b);
     }
-    
-    public void normalizar(){
-        for(int i = 0, m = obterAltura(); i < m; i++){
+
+    public void normalizar() {
+        for (int i = 0, m = obterAltura(); i < m; i++) {
             normalizarVetor(i);
         }
     }
-    
-    public double normalizarVetor(int i){
+
+    public double normalizarVetor(int i) {
         double modulo = modulo(i);
         multiplicarLinha(i, 1 / modulo);
         return modulo;
@@ -1424,21 +1473,21 @@ public class Matriz {
 
     public TipoOrtogonalizacao classificarOrtogonalizacao() {
         boolean ortogonal = true, normal = true;
-        
+
         int m = obterAltura();
-        for(int i = 0; i < m; i++){
-            double comprimento = arredontarValor(produtoInterno(i, i));
-            if(comprimento != 1){
+        for (int i = 0; i < m; i++) {
+            double comprimento = arredontarValor(Matriz.this.produtoInterno(i, i));
+            if (comprimento != 1) {
                 normal = false;
                 break;
             }
         }
-        
+
         loopOrtogonal:
-        for(int i = 1; i < m; i++){
-            for(int ii = 0; ii < i; ii++){
+        for (int i = 1; i < m; i++) {
+            for (int ii = 0; ii < i; ii++) {
                 double coeficiente = arredontarValor(coeficienteVetorial(i, ii));
-                if(coeficiente != 0){
+                if (coeficiente != 0) {
                     ortogonal = false;
                     break loopOrtogonal;
                 }

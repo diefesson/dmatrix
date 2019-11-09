@@ -542,7 +542,7 @@ public class DMatrixView extends javax.swing.JFrame {
         menuBasesVetoriais.add(menuBasePreparar);
         menuBasesVetoriais.add(jSeparator8);
 
-        menuBaseOrtogonalizar.setText("Aplicar Gram-Schmidt");
+        menuBaseOrtogonalizar.setText("Aplicar ortogonalização de Gram-Schmidt");
         menuBaseOrtogonalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuBaseOrtogonalizarActionPerformed(evt);
@@ -550,7 +550,7 @@ public class DMatrixView extends javax.swing.JFrame {
         });
         menuBasesVetoriais.add(menuBaseOrtogonalizar);
 
-        menuBaseNormalizar.setText("Normalizar");
+        menuBaseNormalizar.setText("Aplicar normalização");
         menuBaseNormalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuBaseNormalizarActionPerformed(evt);
@@ -1084,7 +1084,7 @@ public class DMatrixView extends javax.swing.JFrame {
         String mensagem;
         switch (ts) {
             case POSSIVEL_DETERMINADO:
-                mensagem = "Sistema possivel e determinado com " + m.obterIncognitas() + " incognitas relevantes";
+                mensagem = "Sistema possivel e determinado com " + m.quantidadeIncognitas() + " incognitas relevantes";
                 break;
             case POSSIVEL_INDERMINADO:
                 mensagem = "Sitema possivel, mas indeterminado";
@@ -1299,7 +1299,7 @@ public class DMatrixView extends javax.swing.JFrame {
         Matriz matriz = control.obterMatriz(nome);
 
         if (matriz.classificarBase() != TipoBase.INDEPENDENTE) {
-            JOptionPane.showMessageDialog(this, "Base inválida, por favor use prepare a base primeiro");
+            JOptionPane.showMessageDialog(this, "A base não é do tipo independente, por favor prepare a base primeiro");
         }
 
         Matriz ortogonal = new Matriz(matriz, false, true);

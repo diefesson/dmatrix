@@ -13,19 +13,28 @@ public class DMatrix {
         iniciar();
     }
 
-    private static void testar() {
+    public static void testar() {
         Matriz m = new Matriz(new double[][]{
-            {0.0001, 0.99, 0},
-            {1, 0, 0},
-            {0, 0, 2}
+            {1, 2, 3},
+            {3, 2, 3},
+            {2, 4, 6},
+            {6, 2, 9}
         });
-        m.ortogonalizar();
-        m.normalizar();
-        System.out.println(m.classificarOrtogonalizacao());
-        System.out.println(m);
+        
+        m.iniciarHistorico();
+        
+        m.prepararBase();
+        
+        for(var r : m.obterHistorico()){
+            System.out.println(r.obterMatriz());
+            for(var s : r){
+                System.out.println(s);
+            }
+            System.out.print("\n\n");
+        }
     }
 
-    private static void iniciar() {
+    public static void iniciar() {
         definirLaf();
         new DMatrixView().setVisible(true);
     }

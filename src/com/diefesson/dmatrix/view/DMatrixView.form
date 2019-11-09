@@ -438,7 +438,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuBaseOrtogonalizar">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Aplicar Gram-Schmidt"/>
+                <Property name="text" type="java.lang.String" value="Aplicar ortogonaliza&#xe7;&#xe3;o de Gram-Schmidt"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuBaseOrtogonalizarActionPerformed"/>
@@ -446,7 +446,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuBaseNormalizar">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Normalizar"/>
+                <Property name="text" type="java.lang.String" value="Aplicar normaliza&#xe7;&#xe3;o"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuBaseNormalizarActionPerformed"/>
