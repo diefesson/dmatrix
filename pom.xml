@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.diefesson</groupId>
     <artifactId>DMatrix-maven</artifactId>
-    <version>0.9</version>
+    <version>0.9.1</version>
     
     <packaging>jar</packaging>
     

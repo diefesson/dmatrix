@@ -1025,9 +1025,6 @@ public class DMatrixView extends javax.swing.JFrame {
             if (a.obterAltura() != m.obterAltura()) {
                 JOptionPane.showMessageDialog(this, "Redimensione a ampliada de forma que sejam representadas na mesma altura");
                 return;
-            } else if (a.obterLargura() != 1) {
-                JOptionPane.showMessageDialog(this, "A matriz ampliada deve ter largura 1");
-                return;
             }
         }
 
@@ -1050,9 +1047,6 @@ public class DMatrixView extends javax.swing.JFrame {
             Matriz a = m.obterAmpliada();
             if (a.obterAltura() != m.obterAltura()) {
                 JOptionPane.showMessageDialog(this, "Redimensione a ampliada de forma que sejam representadas na mesma altura");
-                return;
-            } else if (a.obterLargura() != 1) {
-                JOptionPane.showMessageDialog(this, "A matriz ampliada deve ter largura 1");
                 return;
             }
         }

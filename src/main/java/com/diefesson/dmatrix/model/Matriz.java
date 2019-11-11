@@ -928,9 +928,7 @@ public class Matriz {
         DirecaoEliminacao direcao = (jordan) ? DirecaoEliminacao.AMBAS : DirecaoEliminacao.BAIXO;
 
         if (ampliada != null) {
-            if (ampliada.obterLargura() != 1) {
-                throw new IllegalStateException("a largura da matriz ampliada deve ser igual a 1");
-            } else if (ampliada.obterAltura() != m) {
+             if (ampliada.obterAltura() != m) {
                 throw new IllegalStateException("a altura da matriz ampliada deve ser igual");
             }
         }
