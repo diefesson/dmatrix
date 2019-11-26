@@ -140,7 +140,7 @@ public class Matriz {
         }
     }
 
-    public void definirValor(double valor, int i, int j) {
+    public void definirValor(int i, int j, double valor) {
         valores[i][j] = valor;
     }
 
@@ -375,7 +375,7 @@ public class Matriz {
                 for (int k = 0; k < o; k++) {//loop da soma
                     valor += obterValor(i, k) * outra.obterValor(k, j);
                 }
-                saida.definirValor(valor, i, j);
+                saida.definirValor(i, j, valor);
             }
         }
 
@@ -438,7 +438,7 @@ public class Matriz {
         Matriz m = new Matriz(ordem, ordem);
         for (int i = 0; i < ordem; i++) {
             for (int j = 0; j < ordem; j++) {
-                m.definirValor(obterMenorComplemento(i, j), i, j);
+                m.definirValor(i, j, obterMenorComplemento(i, j));
             }
         }
 
@@ -618,7 +618,7 @@ public class Matriz {
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                matriz.definirValor(obterValor(i, j), j, i);
+                matriz.definirValor(j, i, obterValor(i, j));
             }
         }
 
@@ -928,7 +928,7 @@ public class Matriz {
         DirecaoEliminacao direcao = (jordan) ? DirecaoEliminacao.AMBAS : DirecaoEliminacao.BAIXO;
 
         if (ampliada != null) {
-             if (ampliada.obterAltura() != m) {
+            if (ampliada.obterAltura() != m) {
                 throw new IllegalStateException("a altura da matriz ampliada deve ser igual");
             }
         }
@@ -1250,24 +1250,26 @@ public class Matriz {
 
     /**
      * Retira as colunas e filas nulas e redimensiona a matriz
+     *
      * @param linhas se as linas devem ser oranizadas
      * @param colunas se as colunas devem ser organizadas
-     * @param redimensionar se ao final da organizacao deve redimensionar ao tamanho sem filas nulas
+     * @param redimensionar se ao final da organizacao deve redimensionar ao
+     * tamanho sem filas nulas
      */
     public void organizar(boolean linhas, boolean colunas, boolean redimensionar) {
         if (!(linhas || colunas)) {
             return;
         }
-        
-        if(historico != null){
+
+        if (historico != null) {
             historico.adcionarDescricao("Inicio da reorganização da matriz");
-            if(linhas){
+            if (linhas) {
                 historico.adcionarDescricao("por linhas");
             }
-            if(colunas){
+            if (colunas) {
                 historico.adcionarDescricao("por colunas");
             }
-            if(redimensionar){
+            if (redimensionar) {
                 historico.adcionarDescricao("com redimensionamento");
             }
         }
@@ -1306,8 +1308,6 @@ public class Matriz {
             }
         }
 
-
-
         if (redimensionar) {
             mm = Math.max(1, mm);//Caso ela seja toda nula, o tamanho mínimo é 1x1
             nn = Math.max(1, nn);
@@ -1328,7 +1328,7 @@ public class Matriz {
             historico.adcionarDescricao("Inicio da preparação da base");
         }
 
-        redimensionar(Math.max(obterAltura(),n), n);//garante a quantidade minima de linhas
+        redimensionar(Math.max(obterAltura(), n), n);//garante a quantidade minima de linhas
 
         Matriz g = new Matriz(this, false, false);
         g.gaussSemTroca();//base auxiliar para encontrar termos dependentes
@@ -1350,7 +1350,7 @@ public class Matriz {
                 definirVetorElementar(d++, v);//insere um vetor elementar v na linha d
             }
         }
-        
+
         organizar(true, false, true);//organiza os vetores no começo da matriz e retira os vetores nulos
 
         if (h) {
@@ -1521,6 +1521,113 @@ public class Matriz {
         return sb.toString();
     }
 
+    public void contersaoBooleana() {
+        for (int i = 0, m = obterAltura(); i < m; i++) {
+            for (int j = 0, n = obterLargura(); j < n; j++) {
+                valores[i][j] = (valores[i][j] > 0) ? 1 : 0;
+            }
+        }
+    }
+
+    public void definirBooleano(int i, int j, boolean valor) {
+        valores[i][j] = (valor) ? 1 : 0;
+    }
+
+    public boolean obterBooleano(int i, int j) {
+        return valores[i][j] > 0;
+    }
+
+    public void ou(Matriz outra) {
+        int m = obterAltura();
+        int n = obterLargura();
+
+        if (outra.obterAltura() != m || outra.obterLargura() != n) {
+            throw new IllegalArgumentException("As matrizes devem ter o mesmo tamanho");
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if(outra.valores[i][j] > 0){
+                    valores[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    public void e(Matriz outra) {
+        int m = obterAltura();
+        int n = obterLargura();
+
+        if (outra.obterAltura() != m || outra.obterLargura() != n) {
+            throw new IllegalArgumentException("As matrizes devem ter o mesmo tamanho");
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                valores[i][j] = (valores[i][j] > 0 && outra.valores[i][j] > 0) ? 1 : 0;
+            }
+        }
+    }
+
+    public void subtracaoBooleana(Matriz outra) {
+        int altura = obterAltura();
+        int largura = obterLargura();
+
+        if (outra.obterAltura() != altura || outra.obterLargura() != largura) {
+            //Futuramente seria vantajoso eu criar a propria exceção para evitar tanta repeticão
+            throw new IllegalArgumentException("As matrizes devem ter o mesmo tamanho");
+        }
+        
+        for(int i = 0; i < altura; i++){
+            for(int j = 0; j < largura; j++){
+                if(outra.valores[i][j] > 0){
+                    valores[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    public Matriz multiplicacaoBooleana(Matriz outra) {
+        Matriz resultado = matrizParaMultiplicacao(outra);
+
+        int m = obterAltura();
+        int n = obterLargura();
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                for (int k = 0; k < n; k++) {
+                    if (valores[i][k] > 0 && outra.valores[k][j] > 0) {
+                        resultado.valores[i][j] = 1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return resultado;
+    }
+
+    public Matriz potenciaBooleana(int expoente) {
+        if (expoente < 0) {
+            {
+                throw new IllegalArgumentException("O expoente não pode ser negativo");
+            }
+        } else if (!verificarQuadrada()) {
+            throw new IllegalStateException("A matriz deve ser quadrada para que tenha uma potência");
+        }
+
+        if (expoente == 0) {
+            return gerarIdentidade(obterAltura());
+        }
+
+        Matriz resultado = new Matriz(this, false, true);
+        for (int i = 1; i < expoente; i++) {
+            resultado = resultado.multiplicacaoBooleana(this);
+        }
+
+        return resultado;
+    }
+
     /**
      *
      * @param ordem a ordem da matriz, levando em conta que toda matriz
@@ -1619,7 +1726,7 @@ public class Matriz {
                 if (arredontar) {
                     v = Math.floor(v);
                 }
-                matriz.definirValor(v, i, j);
+                matriz.definirValor(i, j, v);
             }
         }
     }

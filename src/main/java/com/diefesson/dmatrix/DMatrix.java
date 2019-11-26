@@ -14,24 +14,20 @@ public class DMatrix {
     }
 
     public static void testar() {
-        Matriz m = new Matriz(new double[][]{
-            {1, 2, 3},
-            {3, 2, 3},
-            {2, 4, 6},
-            {6, 2, 9}
+        Matriz a = new Matriz(new double[][]{
+            {0, 1, 1},
+            {0, 0, 1},
+            {0, 0, 0}
         });
         
-        m.iniciarHistorico();
+        Matriz b = new Matriz(new double[][]{
+            {0, 0, 1},
+            {0, 0, 0},
+            {0, 0, 0}
+        });
         
-        m.prepararBase();
-        
-        for(var r : m.obterHistorico()){
-            System.out.println(r.obterMatriz());
-            for(var s : r){
-                System.out.println(s);
-            }
-            System.out.print("\n\n");
-        }
+        a.subtracaoBooleana(b);
+        System.out.println(a);
     }
 
     public static void iniciar() {

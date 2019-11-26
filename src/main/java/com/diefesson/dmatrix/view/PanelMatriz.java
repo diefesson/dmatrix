@@ -80,7 +80,7 @@ public class PanelMatriz extends javax.swing.JPanel {
                 } catch (NumberFormatException ex) {
 
                 }
-                matriz.definirValor(valor, i, j);
+                matriz.definirValor(i, j, valor);
             }
         }
     }
